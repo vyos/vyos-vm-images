@@ -1,0 +1,9 @@
+# Ansible
+*.retry
+
+# images
+*.img
+*.qcow2
+
+# Python
+.python-version

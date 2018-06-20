@@ -1,0 +1,8 @@
+---
+- hosts: qemu
+  become: True
+  gather_facts: False
+  connection: local
+  roles:
+    - common
+    - qemu

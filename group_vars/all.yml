@@ -1,0 +1,16 @@
+ansible_host_key_checking: False
+
+vyos_iso_url: "{{ iso }}"
+vyos_iso_local: /tmp/vyos.iso
+vyos_key_url: http://packages.vyos.net/vyos-release.gpg
+vyos_key_local: /tmp/vyos-release.gpg
+
+CD_ROOT: /mnt/cdrom
+CD_SQUASH_ROOT: /mnt/cdsquash
+SQUASHFS_IMAGE: "{{ CD_ROOT }}/live/filesystem.squashfs"
+
+ROOT_FSTYPE: ext4
+
+WRITE_ROOT: /mnt/wroot
+READ_ROOT: /mnt/squashfs
+INSTALL_ROOT: /mnt/inst_root

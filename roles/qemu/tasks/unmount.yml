@@ -1,0 +1,66 @@
+# Unmount all mounts
+# If remove unmounted before absent, cannot unmount INSTALL_ROOT...
+- name: Unmount {{ INSTALL_ROOT }}/boot
+  mount:
+    name: "{{ INSTALL_ROOT }}/boot"
+    src: "{{ WRITE_ROOT }}"
+    fstype: none
+    state: unmounted
+
+- name: Unmount {{ INSTALL_ROOT }}/boot
+  mount:
+    name: "{{ INSTALL_ROOT }}/boot"
+    src: "{{ WRITE_ROOT }}"
+    fstype: none
+    state: absent
+
+- name: Unmount {{ INSTALL_ROOT }}/sys, {{ INSTALL_ROOT }}/proc, {{ INSTALL_ROOT }}/dev
+  mount:
+    name: "{{ INSTALL_ROOT }}/{{ item }}"
+    src: "/{{ item }}"
+    fstype: none
+    state: unmounted
+  with_items: [ 'sys', 'proc', 'dev' ]
+
+- name: Unmount {{ INSTALL_ROOT }}/sys, {{ INSTALL_ROOT }}/proc, {{ INSTALL_ROOT }}/dev
+  mount:
+    name: "{{ INSTALL_ROOT }}/{{ item }}"
+    src: "/{{ item }}"
+    fstype: none
+    state: absent
+  with_items: [ 'sys', 'proc', 'dev' ]
+
+- name: Unmount {{ INSTALL_ROOT }}
+  mount:
+    name: "{{ INSTALL_ROOT }}"
+    src: overlayfs
+    fstype: overlayfs
+    state: absent
+
+- name: Unmount {{ READ_ROOT }}
+  mount:
+    name: "{{ READ_ROOT }}"
+    src: "{{ WRITE_ROOT }}/boot/{{ version_string.stdout }}/{{ version_string.stdout }}.squashfs"
+    fstype: squashfs
+    state: absent
+
+- name: Unmount {{ WRITE_ROOT }}
+  mount:
+    name: "{{ WRITE_ROOT }}"
+    src: "{{ loopback.stdout }}"
+    fstype: "{{ ROOT_FSTYPE }}"
+    state: absent
+
+- name: Unmount {{ CD_SQUASH_ROOT }}
+  mount:
+    name: "{{ CD_SQUASH_ROOT }}"
+    src: "{{ SQUASHFS_IMAGE }}"
+    fstype: squashfs
+    state: absent
+
+- name: Unmount {{ CD_ROOT }}
+  mount:
+    name: "{{ CD_ROOT }}"
+    src: "{{ vyos_iso_local }}"
+    fstype: iso9660
+    state: absent

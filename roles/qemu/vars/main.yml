@@ -1,0 +1,2 @@
+vyos_raw_img: /tmp/vyos_raw_image.img
+vyos_qemu_img: /tmp/vyos_qemu_image.qcow2
