@@ -1,0 +1,24 @@
+- name: Convert raw to qcow2
+  command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O qcow2 "{{ vyos_vagrant_libvirt_box_img }}"
+- name: Copy metadata.json
+  become: false
+  copy:
+    src: "{{ vyos_vagrant_libvirt_metadata }}"
+    dest: "{{ vyos_vagrant_libvirt_tmp_metadata }}"
+- name: Copy Vagrantfile
+  become: false
+  copy:
+    src: "{{ vyos_vagrant_libvirt_vagrantfile }}"
+    dest: "{{ vyos_vagrant_libvirt_tmp_vagrantfile }}"
+- name: Create OVA with private key
+  become: false
+  archive:
+    path:
+      - "{{ vyos_vagrant_libvirt_box_img }}"
+      - "{{ vyos_vagrant_libvirt_tmp_metadata }}"
+      - "{{ vyos_vagrant_libvirt_tmp_vagrantfile }}"
+    dest: "{{ vyos_vagrant_libvirt_box }}"
+    format: tar
+- name: Copy image
+  become: false
+  command: cp "{{ vyos_vagrant_libvirt_box }}" .

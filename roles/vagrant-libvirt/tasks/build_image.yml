@@ -1,0 +1,122 @@
+- name: Create the target disk image
+  command: qemu-img create -f raw "{{ vyos_raw_img }}" 1G
+
+- name: Find loopback
+  shell: losetup -f 
+  register: loopback
+
+- name: Loopback attach
+  command: "losetup {{ loopback.stdout }} {{ vyos_raw_img }}"
+
+- name: Partition the target drive
+  parted:
+    device: "{{ loopback.stdout }}"
+    state: present
+    label: msdos
+    number: 1
+    part_type: primary
+    part_start: 0%
+    part_end: 100%
+    align: optimal
+    flags: [boot]
+
+- name: Create a filesystem on root partition
+  filesystem:
+    fstype: "{{ ROOT_FSTYPE }}"
+    device: "{{ loopback.stdout }}"
+    opts: "-L persistence"
+
+- name: Mount root partition
+  mount:
+    name: "{{ WRITE_ROOT }}"
+    src: "{{ loopback.stdout }}"
+    fstype: "{{ ROOT_FSTYPE }}"
+    state: mounted
+
+# ---- Install image from ISO ----
+- name: Create {{ WRITE_ROOT }} directories
+  file:
+    path: "{{ WRITE_ROOT }}/boot/{{ version_string.stdout }}/rw"
+    state: directory
+  register: RW_DIR
+
+- name: Create the work directory
+  file:
+    path: "{{ WRITE_ROOT }}/boot/{{ version_string.stdout }}/work/work"
+    state: directory
+
+- name: Copy squashfs image from ISO to root partition
+  command: cp -p {{ SQUASHFS_IMAGE }} {{ WRITE_ROOT }}/boot/{{ version_string.stdout }}/{{ version_string.stdout }}.squashfs
+  args:
+   creates: "{{ WRITE_ROOT }}/boot/{{ version_string.stdout }}/{{ version_string.stdout }}.squashfs"
+
+- name: Copy boot files (kernel and initrd images) from ISO to root partition
+  shell: find {{ CD_SQUASH_ROOT }}/boot -maxdepth 1  \( -type f -o -type l \) -print -exec cp -dp {} {{ WRITE_ROOT }}/boot/{{ version_string.stdout }}/ \;
+  args:
+    creates: "{{ WRITE_ROOT }}/boot/{{ version_string.stdout }}/vmlinuz"
+
+- name: Mount squashfs image from root partition
+  mount:
+    name: "{{ READ_ROOT }}"
+    src: "{{ WRITE_ROOT }}/boot/{{ version_string.stdout }}/{{ version_string.stdout }}.squashfs"
+    fstype: squashfs
+    opts: loop,ro
+    state: mounted
+
+- name: Set up union root for post installation tasks
+  mount:
+    name: "{{ INSTALL_ROOT }}"
+    src: none
+    fstype: aufs
+    opts: "noatime,dirs={{ RW_DIR.path }}=rw:{{ READ_ROOT }}=rr"
+    state: mounted
+
+# ---- Post image installation tasks ----
+
+## ---- VyOS configuration ----
+- name: Make sure that config partition marker exists
+  file:
+    path: "{{ INSTALL_ROOT }}/opt/vyatta/etc/config/.vyatta_config"
+    state: touch
+
+- name: Copy the default config for QEMU to the installed image
+  template:
+    src: files/config.boot
+    dest: "{{ INSTALL_ROOT }}/opt/vyatta/etc/config/config.boot"
+    mode: 0755
+
+## ---- Install GRUB boot loader ----
+- name: Create GRUB directory
+  file:
+    path: "{{ WRITE_ROOT }}/boot/grub"
+    state: directory
+
+# It is necessary to mount and bind /dev, /proc, /sys and /boot in order to execute grub-install
+# and install GRUB correctly within the {{ volume_drive }} using chroot
+
+# XXX: ansible mount module requires fstype so it cannot be used for binding an already
+# mounted location, we get to use mount directly at least for /boot
+- name: Mount and bind /dev /proc /sys and {{ WRITE_ROOT }}/boot to {{ INSTALL_ROOT }}
+  shell: mount --bind /dev {{ INSTALL_ROOT }}/dev &&
+         mount --bind /proc {{ INSTALL_ROOT }}/proc &&
+         mount --bind /sys {{ INSTALL_ROOT }}/sys &&
+         mount --bind {{ WRITE_ROOT }} {{ INSTALL_ROOT }}/boot
+  args:
+    warn: no
+
+- name: Install GRUB in the boot sector of {{ loopback.stdout }}
+  command: chroot {{ INSTALL_ROOT }} grub-install --no-floppy --root-directory=/boot {{ loopback.stdout }} --force
+  args:
+    creates: "{{ INSTALL_ROOT }}/boot/grub/grubenv"
+
+- name: Configure GRUB
+  template:
+    src: templates/boot/grub/grub.cfg.j2
+    dest: "{{ WRITE_ROOT }}/boot/grub/grub.cfg"
+    mode: 0644
+
+- name: Create the persistence config
+  template:
+    src: files/persistence.conf
+    dest: "{{ WRITE_ROOT }}/persistence.conf"
+    mode: 0644

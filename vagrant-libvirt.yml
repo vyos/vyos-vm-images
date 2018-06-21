@@ -1,0 +1,8 @@
+---
+- hosts: vagrant-libvirt
+  become: True
+  gather_facts: False
+  connection: local
+  roles:
+    - common
+    - vagrant-libvirt

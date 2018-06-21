@@ -9,3 +9,6 @@ localhost
 
 [hyperv]
 localhost
+
+[vagrant-libvirt]
+localhost

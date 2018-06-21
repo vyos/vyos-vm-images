@@ -1,0 +1,57 @@
+- name: Fetch VyOS ISO GPG signature
+  uri:
+    url: "{{ vyos_iso_url }}.asc"
+    dest: "{{ vyos_iso_local }}.asc"
+    status_code: 200,404,403
+  tags: verify
+  register: gpg_uri
+
+- name: Download VyOS ISO release
+  get_url:
+    url: "{{ vyos_iso_url }}"
+    dest: "{{ vyos_iso_local }}"
+
+- name: Fetch the VyOS release GPG key
+  get_url:
+    url: "{{ vyos_key_url}}"
+    dest: "{{ vyos_key_local }}"
+  tags: verify
+
+- name: Install the VyOS release GPG key
+  command: gpg --import {{ vyos_key_local }}
+  when: gpg_uri.status == 200
+  tags: verify
+
+- name: Validate ISO GPG signature
+  command: gpg --verify {{ vyos_iso_local }}.asc {{ vyos_iso_local }}
+  when: gpg_uri.status == 200
+  tags: verify
+
+- name: Mount ISO
+  mount:
+    name: "{{ CD_ROOT }}"
+    src: "{{ vyos_iso_local }}"
+    fstype: iso9660
+    opts: loop,ro
+    state: mounted
+
+- name: Verify checksums of all the files in the ISO image
+  command: md5sum -c md5sum.txt
+  args:
+    chdir: "{{ CD_ROOT }}"
+  changed_when: False
+
+- name: Mount squashfs image from ISO
+  mount:
+    name: "{{ CD_SQUASH_ROOT }}"
+    src: "{{ SQUASHFS_IMAGE }}"
+    fstype: squashfs
+    opts: loop,ro
+    state: mounted
+
+- name: Read version string from iso packages
+  shell: cat {{ CD_SQUASH_ROOT }}/opt/vyatta/etc/version | awk '{print $2}' | tr + -
+  register: version_string
+
+- name: Debug version string as read from ISO
+  debug: msg="This is version {{ version_string.stdout }}"
