@@ -1,0 +1,7 @@
+set default=0
+set timeout=0
+
+menuentry "VyOS VM Image {{ version_string.stdout }}" {
+  linux /boot/{{ version_string.stdout }}/vmlinuz boot=live selinux=0 vyos-union=/boot/{{ version_string.stdout }} console=tty1
+  initrd /boot/{{ version_string.stdout }}/initrd.img
+}

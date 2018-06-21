@@ -3,3 +3,6 @@ localhost
 
 [qemu]
 localhost
+
+[vmware]
+localhost

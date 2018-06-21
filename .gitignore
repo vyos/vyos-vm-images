@@ -4,6 +4,7 @@
 # images
 *.img
 *.qcow2
+*.ova
 
 # Python
 .python-version

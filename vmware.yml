@@ -1,0 +1,8 @@
+---
+- hosts: vmware
+  become: True
+  gather_facts: False
+  connection: local
+  roles:
+    - common
+    - vmware
