@@ -13,14 +13,12 @@
     url: "https://app.vagrantup.com/api/v1/box/{{ vyos_vagrant_box_name }}/versions?access_token={{ vyos_vagrant_cloud_access_token }}"
     method: POST
     body: "version[version]={{ box_version }}"
-    status_code: 201
   when: vyos_images_dir is defined and vyos_vagrant_box_base_url is defined and vyos_vagrant_cloud_access_token is defined
 - name: Create the box provider
   uri:
     url: "https://app.vagrantup.com/api/v1/box/{{ vyos_vagrant_box_name }}/version/{{ box_version }}/providers?access_token={{ vyos_vagrant_cloud_access_token }}"
     method: POST
     body: "provider[name]=libvirt&provider[url]={{ vyos_vagrant_box_base_url }}/vyos-{{ version_string.stdout }}-vagrant-libvirt.box"
-    status_code: 201
   when: vyos_images_dir is defined and vyos_vagrant_box_base_url is defined and vyos_vagrant_cloud_access_token is defined
 - name: Release the box
   uri:
