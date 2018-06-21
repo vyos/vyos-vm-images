@@ -7,4 +7,6 @@
       - e2fsprogs
       - gnupg
       - qemu-utils
+      - python-lxml
+      - aufs-tools
     state: present

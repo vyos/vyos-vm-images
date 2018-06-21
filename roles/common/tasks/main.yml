@@ -1,9 +1,2 @@
-- name: get latest_iso if iso is not defined
-  latest_iso:
-  when: iso is not defined
-  register: latest_iso
-
-- name: set latest_iso as vyos_iso_url
-  set_fact:
-    vyos_iso_url: "{{ latest_iso.latest_iso }}"
-  when: latest_iso is defined
+- include_tasks: install_packages.yml
+- include_tasks: get_latest_iso.yml
