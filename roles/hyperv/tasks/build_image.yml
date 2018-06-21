@@ -80,7 +80,7 @@
     state: touch
 
 - name: Copy the default config for QEMU to the installed image
-  template:
+  copy:
     src: files/config.boot
     dest: "{{ INSTALL_ROOT }}/opt/vyatta/etc/config/config.boot"
     mode: 0755
@@ -116,7 +116,7 @@
     mode: 0644
 
 - name: Create the persistence config
-  template:
+  copy:
     src: files/persistence.conf
     dest: "{{ WRITE_ROOT }}/persistence.conf"
     mode: 0644
