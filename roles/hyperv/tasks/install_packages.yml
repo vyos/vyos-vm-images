@@ -1,0 +1,10 @@
+- name: Install required packages
+  become: yes
+  apt:
+    update_cache: yes
+    name:
+      - parted
+      - e2fsprogs
+      - gnupg
+      - qemu-utils
+    state: present

@@ -6,3 +6,6 @@ localhost
 
 [vmware]
 localhost
+
+[hyperv]
+localhost
