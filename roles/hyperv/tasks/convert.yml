@@ -1,5 +1,2 @@
 - name: Convert raw to vhd
   command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O vpc "{{ vyos_hyperv_img }}"
-- name: Copy image
-  become: false
-  command: cp "{{ vyos_hyperv_img }}" .

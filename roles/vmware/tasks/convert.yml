@@ -53,6 +53,7 @@
     content: |
       {{ signature.stdout }}
       {{ certificate.stdout }}
+  when: vyos_vmware_private_key_path is defined
 - name: Create OVA with private key
   become: false
   archive:
@@ -64,6 +65,3 @@
     dest: "{{ vyos_vmware_ova }}"
     format: tar
   when: vyos_vmware_private_key_path is defined
-- name: Copy image
-  become: false
-  command: cp "{{ vyos_vmware_ova }}" .

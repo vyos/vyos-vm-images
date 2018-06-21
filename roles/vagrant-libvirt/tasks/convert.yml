@@ -10,7 +10,7 @@
   copy:
     src: "{{ vyos_vagrant_libvirt_vagrantfile }}"
     dest: "{{ vyos_vagrant_libvirt_tmp_vagrantfile }}"
-- name: Create OVA with private key
+- name: Create Vagrant box
   become: false
   archive:
     path:
@@ -19,6 +19,3 @@
       - "{{ vyos_vagrant_libvirt_tmp_vagrantfile }}"
     dest: "{{ vyos_vagrant_libvirt_box }}"
     format: tar
-- name: Copy image
-  become: false
-  command: cp "{{ vyos_vagrant_libvirt_box }}" .
