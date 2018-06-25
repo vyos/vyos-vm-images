@@ -7,24 +7,24 @@
 - QEMU
 
     ```
-    ansible-playbook -i hosts qemu.yml
+    ansible-playbook qemu.yml
     ```
 
 - VMware
 
     ```
-    ansible-playbook -i hosts vmware.yml
-    ansible-playbook -i hosts vmware.yml -e vyos_vmware_private_key_path=path_to_private_key
+    ansible-playbook vmware.yml
+    ansible-playbook vmware.yml -e vyos_vmware_private_key_path=path_to_private_key
     ```
 
 - Microsoft Hyper-V
 
     ```
-    ansible-playbook -i hosts hyperv.yml
+    ansible-playbook hyperv.yml
     ```
 
 - Vagrant libvirt
 
     ```
-    ansible-playbook -i hosts vagrant-libvirt.yml
+    ansible-playbook vagrant-libvirt.yml
     ```
