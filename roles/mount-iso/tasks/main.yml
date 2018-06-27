@@ -1,0 +1,23 @@
+- name: Mount ISO
+  become: true
+  mount:
+    name: "{{ vyos_cd_root }}"
+    src: "{{ vyos_iso_local }}"
+    fstype: iso9660
+    opts: loop,ro
+    state: mounted
+
+- name: Verify checksums of all the files in the ISO image
+  command: md5sum -c md5sum.txt
+  args:
+    chdir: "{{ vyos_cd_root }}"
+  changed_when: False
+
+- name: Mount squashfs image from ISO
+  become: true
+  mount:
+    name: "{{ vyos_cd_squash_root }}"
+    src: "{{ vyos_squashfs_image }}"
+    fstype: squashfs
+    opts: loop,ro
+    state: mounted

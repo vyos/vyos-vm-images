@@ -3,6 +3,25 @@
   become: True
   gather_facts: False
   connection: local
+  vars:
+    vyos_platform: Hyper-V
+    vyos_format: vhd
+    vyos_hyperv_img: /tmp/vyos_hyperv_image.vhd
+    vyos_output_img: "{{ vyos_hyperv_img }}"
   roles:
-    - common
-    - hyperv
+    - install-packages
+    - load-modules
+    - download-iso
+    - mount-iso
+    - get-version
+    - create-disk
+    - attach-loop-device
+    - setup-root-partition
+    - install-image
+    - mount-root-fs
+    - install-config
+    - install-grub
+    - install-persistence-conf
+    - unmount-all
+    - hyperv-vhd
+    - release

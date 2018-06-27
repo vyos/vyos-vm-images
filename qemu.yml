@@ -1,8 +1,26 @@
 ---
 - hosts: qemu
-  become: True
-  gather_facts: False
+  gather_facts: false
   connection: local
+  vars:
+    vyos_platform: QEMU
+    vyos_format: qcow2
+    vyos_qemu_img: /tmp/vyos_qemu_image.qcow2
+    vyos_output_img: "{{ vyos_qemu_img }}"
   roles:
-    - common
-    - qemu
+    - install-packages
+    - load-modules
+    - download-iso
+    - mount-iso
+    - get-version
+    - create-disk
+    - attach-loop-device
+    - setup-root-partition
+    - install-image
+    - mount-root-fs
+    - install-config
+    - install-grub
+    - install-persistence-conf
+    - unmount-all
+    - qemu-qcow2
+    - release

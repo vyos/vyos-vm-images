@@ -1,8 +1,0 @@
-vyos_raw_img: /tmp/vyos_raw_image.img
-vyos_vagrant_libvirt_box_img: /tmp/box.img
-vyos_vagrant_libvirt_box: /tmp/vyos_vagrant_libvirt_image.box
-vyos_vagrant_libvirt_metadata: files/metadata.json
-vyos_vagrant_libvirt_vagrantfile: files/Vagrantfile
-vyos_vagrant_libvirt_tmp_metadata: /tmp/metadata.json
-vyos_vagrant_libvirt_tmp_vagrantfile: /tmp/Vagrantfile
-vyos_vagrant_box_name: vyos/current

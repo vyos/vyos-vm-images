@@ -1,2 +1,0 @@
-- include_tasks: install_packages.yml
-- include_tasks: get_latest_iso.yml

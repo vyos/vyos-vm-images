@@ -1,0 +1,32 @@
+- name: Create GRUB directory
+  become: true
+  file:
+    path: "{{ vyos_write_root }}/boot/grub"
+    state: directory
+
+# It is necessary to mount and bind /dev, /proc, /sys and /boot in order to execute grub-install
+# and install GRUB correctly within the {{ volume_drive }} using chroot
+
+# XXX: ansible mount module requires fstype so it cannot be used for binding an already
+# mounted location, we get to use mount directly at least for /boot
+- name: Mount and bind /dev /proc /sys and {{ vyos_write_root }}/boot to {{ vyos_install_root }}
+  become: true
+  shell: mount --bind /dev {{ vyos_install_root }}/dev &&
+         mount --bind /proc {{ vyos_install_root }}/proc &&
+         mount --bind /sys {{ vyos_install_root }}/sys &&
+         mount --bind {{ vyos_write_root }} {{ vyos_install_root }}/boot
+  args:
+    warn: no
+
+- name: Install GRUB in the boot sector of {{ vyos_target_drive }}
+  become: true
+  command: chroot {{ vyos_install_root }} grub-install --no-floppy --root-directory=/boot {{ vyos_target_drive }} --force
+  args:
+    creates: "{{ vyos_install_root }}/boot/grub/grubenv"
+
+- name: Configure GRUB
+  become: true
+  template:
+    src: templates/boot/grub/grub.cfg.j2
+    dest: "{{ vyos_write_root }}/boot/grub/grub.cfg"
+    mode: 0644

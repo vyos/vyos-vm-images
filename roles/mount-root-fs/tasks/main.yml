@@ -1,0 +1,17 @@
+- name: Mount squashfs image from root partition
+  become: true
+  mount:
+    name: "{{ vyos_read_root }}"
+    src: "{{ vyos_write_root }}/boot/{{ vyos_version }}/{{ vyos_version }}.squashfs"
+    fstype: squashfs
+    opts: loop,ro
+    state: mounted
+
+- name: Set up union root for post installation tasks
+  become: true
+  mount:
+    name: "{{ vyos_install_root }}"
+    src: none
+    fstype: aufs
+    opts: "noatime,dirs={{ vyos_write_root }}/boot/{{ vyos_version }}/rw=rw:{{ vyos_read_root }}=rr"
+    state: mounted

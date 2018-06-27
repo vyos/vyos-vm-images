@@ -1,0 +1,24 @@
+- name: Create {{ vyos_write_root }} directories
+  become: true
+  file:
+    path: "{{ vyos_write_root }}/boot/{{ vyos_version }}/rw"
+    state: directory
+  register: vyos_rw_dir
+
+- name: Create the work directory
+  become: true
+  file:
+    path: "{{ vyos_write_root }}/boot/{{ vyos_version }}/work/work"
+    state: directory
+
+- name: Copy squashfs image from ISO to root partition
+  become: true
+  command: cp -p {{ vyos_squashfs_image }} {{ vyos_write_root }}/boot/{{ vyos_version }}/{{ vyos_version }}.squashfs
+  args:
+   creates: "{{ vyos_write_root }}/boot/{{ vyos_version }}/{{ vyos_version }}.squashfs"
+
+- name: Copy boot files (kernel and initrd images) from ISO to root partition
+  become: true
+  shell: find {{ vyos_cd_squash_root }}/boot -maxdepth 1  \( -type f -o -type l \) -print -exec cp -dp {} {{ vyos_write_root }}/boot/{{ vyos_version }}/ \;
+  args:
+    creates: "{{ vyos_write_root }}/boot/{{ vyos_version }}/vmlinuz"

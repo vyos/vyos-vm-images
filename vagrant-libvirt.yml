@@ -3,6 +3,25 @@
   become: True
   gather_facts: False
   connection: local
+  vars:
+    vyos_platform: vagrant-libvirt
+    vyos_format: box
+    vyos_vagrant_libvirt_box: /tmp/vyos_vagrant_libvirt_image.box
+    vyos_output_img: "{{ vyos_vagrant_libvirt_box }}"
   roles:
-    - common
-    - vagrant-libvirt
+    - install-packages
+    - load-modules
+    - download-iso
+    - mount-iso
+    - get-version
+    - create-disk
+    - attach-loop-device
+    - setup-root-partition
+    - install-image
+    - mount-root-fs
+    - install-config
+    - install-grub
+    - install-persistence-conf
+    - unmount-all
+    - vagrant-libvirt-box
+    - release

@@ -1,6 +1,0 @@
-- name: Release image
-  become: false
-  copy:
-    src: "{{ vyos_vmware_ova }}"
-    dest: "{{ vyos_images_dir }}/vyos-{{ version_string.stdout }}-vmware.ova"
-  when: vyos_images_dir is defined

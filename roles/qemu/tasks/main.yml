@@ -1,6 +1,0 @@
-- include_tasks: load_modules.yml
-- include_tasks: setup_iso.yml
-- include_tasks: build_image.yml
-- include_tasks: unmount.yml
-- include_tasks: convert.yml
-- include_tasks: release.yml

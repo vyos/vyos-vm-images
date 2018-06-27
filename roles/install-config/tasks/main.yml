@@ -1,0 +1,12 @@
+- name: Make sure that config partition marker exists
+  become: true
+  file:
+    path: "{{ vyos_install_root }}/opt/vyatta/etc/config/.vyatta_config"
+    state: touch
+
+- name: Copy the default config for QEMU to the installed image
+  become: true
+  copy:
+    src: files/config.boot
+    dest: "{{ vyos_install_root }}/opt/vyatta/etc/config/config.boot"
+    mode: 0755

@@ -1,0 +1,10 @@
+- name: Read version string from iso packages
+  shell: cat {{ vyos_cd_squash_root }}/opt/vyatta/etc/version | awk '{print $2}' | tr + -
+  register: result
+
+- name: Set vyos_version
+  set_fact:
+    vyos_version: "{{ result.stdout }}"
+
+- name: Debug version string as read from ISO
+  debug: msg="This is version {{ vyos_version }}"

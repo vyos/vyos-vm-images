@@ -1,0 +1,6 @@
+- name: Create the persistence config
+  become: true
+  copy:
+    src: files/persistence.conf
+    dest: "{{ vyos_write_root }}/persistence.conf"
+    mode: 0644

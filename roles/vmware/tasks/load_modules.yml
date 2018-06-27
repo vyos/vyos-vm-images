@@ -1,2 +1,0 @@
-- name: Load aufs module
-  shell: modprobe aufs

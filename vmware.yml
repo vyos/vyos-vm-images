@@ -1,8 +1,27 @@
 ---
 - hosts: vmware
-  become: True
-  gather_facts: False
+  gather_facts: false
   connection: local
+  vars:
+    vyos_platform: VMware
+    vyos_format: ova
+    vyos_vmdk_size: 10
+    vyos_vmware_ova: /tmp/vyos_vmware_image.ova
+    vyos_output_img: "{{ vyos_vmware_ova }}"
   roles:
-    - common
-    - vmware
+    - install-packages
+    - load-modules
+    - download-iso
+    - mount-iso
+    - get-version
+    - create-disk
+    - attach-loop-device
+    - setup-root-partition
+    - install-image
+    - mount-root-fs
+    - install-config
+    - install-grub
+    - install-persistence-conf
+    - unmount-all
+    - vmware-ova
+    - release

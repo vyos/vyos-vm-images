@@ -1,0 +1,75 @@
+# Unmount all mounts
+# If remove unmounted before absent, cannot unmount vyos_install_root...
+- name: Unmount {{ vyos_install_root }}/boot
+  become: true
+  mount:
+    name: "{{ vyos_install_root }}/boot"
+    src: "{{ vyos_write_root }}"
+    fstype: none
+    state: unmounted
+
+- name: Unmount {{ vyos_install_root }}/boot
+  become: true
+  mount:
+    name: "{{ vyos_install_root }}/boot"
+    src: "{{ vyos_write_root }}"
+    fstype: none
+    state: absent
+
+- name: Unmount {{ vyos_install_root }}/sys, {{ vyos_install_root }}/proc, {{ vyos_install_root }}/dev
+  become: true
+  mount:
+    name: "{{ vyos_install_root }}/{{ item }}"
+    src: "/{{ item }}"
+    fstype: none
+    state: unmounted
+  with_items: [ 'sys', 'proc', 'dev' ]
+
+- name: Unmount {{ vyos_install_root }}/sys, {{ vyos_install_root }}/proc, {{ vyos_install_root }}/dev
+  become: true
+  mount:
+    name: "{{ vyos_install_root }}/{{ item }}"
+    src: "/{{ item }}"
+    fstype: none
+    state: absent
+  with_items: [ 'sys', 'proc', 'dev' ]
+
+- name: Unmount {{ vyos_install_root }}
+  become: true
+  mount:
+    name: "{{ vyos_install_root }}"
+    src: overlayfs
+    fstype: overlayfs
+    state: absent
+
+- name: Unmount {{ vyos_read_root }}
+  become: true
+  mount:
+    name: "{{ vyos_read_root }}"
+    src: "{{ vyos_write_root }}/boot/{{ vyos_version }}/{{ vyos_version }}.squashfs"
+    fstype: squashfs
+    state: absent
+
+- name: Unmount {{ vyos_write_root }}
+  become: true
+  mount:
+    name: "{{ vyos_write_root }}"
+    src: "{{ vyos_target_drive }}"
+    fstype: "{{ vyos_root_fstype }}"
+    state: absent
+
+- name: Unmount {{ vyos_cd_squash_root }}
+  become: true
+  mount:
+    name: "{{ vyos_cd_squash_root }}"
+    src: "{{ vyos_squashfs_image }}"
+    fstype: squashfs
+    state: absent
+
+- name: Unmount {{ vyos_cd_root }}
+  become: true
+  mount:
+    name: "{{ vyos_cd_root }}"
+    src: "{{ vyos_iso_local }}"
+    fstype: iso9660
+    state: absent

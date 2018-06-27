@@ -1,0 +1,12 @@
+- name: Install required packages
+  become: true
+  apt:
+    update_cache: true
+    name:
+      - parted
+      - e2fsprogs
+      - gnupg
+      - qemu-utils
+      - python-lxml
+      - aufs-tools
+    state: present

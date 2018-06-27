@@ -1,0 +1,2 @@
+- name: Create the target disk image
+  command: qemu-img create -f raw "{{ vyos_raw_img }}" "{{ vyos_disk_size }}"G

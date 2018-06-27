@@ -1,0 +1,27 @@
+- name: Partition the target drive
+  become: true
+  parted:
+    device: "{{ vyos_target_drive }}"
+    state: present
+    label: msdos
+    number: 1
+    part_type: primary
+    part_start: 0%
+    part_end: 100%
+    align: optimal
+    flags: [boot]
+
+- name: Create a filesystem on root partition
+  become: true
+  filesystem:
+    fstype: "{{ vyos_root_fstype }}"
+    device: "{{ vyos_target_drive }}"
+    opts: "-L persistence"
+
+- name: Mount root partition
+  become: true
+  mount:
+    name: "{{ vyos_write_root }}"
+    src: "{{ vyos_target_drive }}"
+    fstype: "{{ vyos_root_fstype }}"
+    state: mounted
