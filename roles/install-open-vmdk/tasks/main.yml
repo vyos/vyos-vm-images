@@ -1,0 +1,20 @@
+- name: Check vmdk-convert exists
+  stat:
+    path: /usr/bin/vmdk-convert
+  register: stat_result
+- name: Download open-vmdk
+  get_url:
+    url: https://github.com/vmware/open-vmdk/archive/master.zip
+    dest: /tmp/master.zip
+  when: stat_result.stat.exists == False
+- name: Extract master.zip into /var/lib/foo
+  unarchive:
+    src: /tmp/master.zip
+    dest: /tmp
+  when: stat_result.stat.exists == False
+- name: Install open-vmdk
+  become: true
+  make:
+    chdir: /tmp/open-vmdk-master
+    target: install
+  when: stat_result.stat.exists == False
