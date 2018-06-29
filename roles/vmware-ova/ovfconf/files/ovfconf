@@ -1,0 +1,23 @@
+#!/bin/bash
+
+ADDRESS=`/usr/bin/vmtoolsd --cmd "info-get guestinfo.ovfenv" | /bin/grep 'key="address"' | /bin/sed 's/.*value="\([^"]*\)".*/\1/'`
+GATEWAY=`/usr/bin/vmtoolsd --cmd "info-get guestinfo.ovfenv" | /bin/grep 'key="gateway"' | /bin/sed 's/.*value="\([^"]*\)".*/\1/'`
+
+if [ ! -z "${ADDRESS}" ]; then
+    /bin/sed -i "s~address dhcp~address ${ADDRESS}~" /opt/vyatta/etc/config/config.boot
+fi
+if [ ! -z "${GATEWAY}" ]; then
+    cat <<EOF >>/opt/vyatta/etc/config/config.boot
+
+protocols {
+    static {
+        route 0.0.0.0/0 {
+            next-hop ${GATEWAY} {
+            }
+        }
+    }
+}
+EOF
+fi
+
+systemctl disable ovfconf.service

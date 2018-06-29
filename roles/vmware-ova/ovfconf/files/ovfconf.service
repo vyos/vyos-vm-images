@@ -1,0 +1,16 @@
+[Unit]
+Description=Configure initial address based on OVF environment
+After=vmtoolsd.service syslog.target
+Wants=network-pre.target
+Before=network-pre.target vyatta-router.service
+ConditionVirtualization=vmware
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/ovfconf
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

@@ -22,6 +22,7 @@
     - install-config
     - install-grub
     - install-persistence-conf
+    - vmware-ova/ovfconf
     - unmount-all
     - install-open-vmdk
     - vmware-ova
