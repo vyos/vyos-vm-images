@@ -1,23 +1,26 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
-ADDRESS=`/usr/bin/vmtoolsd --cmd "info-get guestinfo.ovfenv" | /bin/grep 'key="address"' | /bin/sed 's/.*value="\([^"]*\)".*/\1/'`
-GATEWAY=`/usr/bin/vmtoolsd --cmd "info-get guestinfo.ovfenv" | /bin/grep 'key="gateway"' | /bin/sed 's/.*value="\([^"]*\)".*/\1/'`
 
-if [ ! -z "${ADDRESS}" ]; then
-    /bin/sed -i "s~address dhcp~address ${ADDRESS}~" /opt/vyatta/etc/config/config.boot
-fi
-if [ ! -z "${GATEWAY}" ]; then
-    cat <<EOF >>/opt/vyatta/etc/config/config.boot
+from subprocess import call, check_output
+from vyos.configtree import ConfigTree
+import xml.etree.ElementTree as ET
 
-protocols {
-    static {
-        route 0.0.0.0/0 {
-            next-hop ${GATEWAY} {
-            }
-        }
-    }
-}
-EOF
-fi
+with open('/opt/vyatta/etc/config/config.boot', 'r') as file:
+    config = ConfigTree(file.read())
 
-systemctl disable ovfconf.service
+xml = check_output(['/usr/bin/vmtoolsd', '--cmd', 'info-get guestinfo.ovfenv'])
+root = ET.fromstring(xml)
+
+for element in root.iter('{http://schemas.dmtf.org/ovf/environment/1}Property'):
+    if '{http://schemas.dmtf.org/ovf/environment/1}key' in element.attrib:
+        if element.attrib['{http://schemas.dmtf.org/ovf/environment/1}key'] == 'address':
+            config.set(['interfaces', 'ethernet', 'eth0', 'address'], value=element.attrib['{http://schemas.dmtf.org/ovf/environment/1}value'])
+        if element.attrib['{http://schemas.dmtf.org/ovf/environment/1}key'] == 'gateway':
+            config.set(['protocols', 'static', 'route', '0.0.0.0/0', 'next-hop', element.attrib['{http://schemas.dmtf.org/ovf/environment/1}value']])
+            config.set_tag(['protocols', 'static', 'route'])
+            config.set_tag(['protocols', 'static', 'route', '0.0.0.0/0', 'next-hop'])
+
+with open('/opt/vyatta/etc/config/config.boot', 'w') as file:
+    file.write(config.to_string())
+
+call(['systemctl', 'disable', 'ovfconf.service'])
