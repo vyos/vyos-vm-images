@@ -123,7 +123,7 @@
       <vmw:Config ovf:required="false" vmw:key="memoryHotAddEnabled" vmw:value="true"/>
       <vmw:Config ovf:required="false" vmw:key="virtualICH7MPresent" vmw:value="false"/>
     </VirtualHardwareSection>
-    <ProductSection>
+    <ProductSection ovf:required="false">
       <Info>Information about the installed software</Info>
       <Product>VyOS</Product>
       <Vendor>Sentrium SL</Vendor>
@@ -131,6 +131,14 @@
       <FullVersion>{{ vyos_version }}</FullVersion>
       <ProductUrl>https://vyos.io</ProductUrl>
       <VendorUrl>https://sentrium.io</VendorUrl>
+      <Property ovf:key="address" ovf:type="string" ovf:userConfigurable="true" ovf:value="">
+        <Label>IP address</Label>
+        <Description>Specifies the IP address (CIDR notation). Leave empty to fall back to using DHCP.</Description>
+      </Property>
+      <Property ovf:key="gateway" ovf:type="string" ovf:userConfigurable="true" ovf:value="">
+        <Label>Gateway</Label>
+        <Description>The default gateway.</Description>
+      </Property>
     </ProductSection>
   </VirtualSystem>
 </Envelope>
