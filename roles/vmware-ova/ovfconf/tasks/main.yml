@@ -2,14 +2,14 @@
   become: true
   copy:
     src: files/ovfconf
-    dest: "{{ vyos_install_root }}/usr/local/sbin/ovfconf"
+    dest: "{{ vyos_install_root }}/usr/bin/ovfconf"
     mode: 0755
 
 - name: Copy OVF configuration service
   become: true
   copy:
     src: files/ovfconf.service
-    dest: "{{ vyos_install_root }}/etc/systemd/system/ovfconf.service"
+    dest: "{{ vyos_install_root }}/lib/systemd/system/ovfconf.service"
 
 - name: Enable OVF configuration service
   become: true

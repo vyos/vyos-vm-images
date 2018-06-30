@@ -8,7 +8,7 @@ ConditionVirtualization=vmware
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/local/sbin/ovfconf
+ExecStart=/usr/bin/ovfconf
 StandardOutput=syslog
 StandardError=syslog
 
