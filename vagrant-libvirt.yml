@@ -25,3 +25,4 @@
     - unmount-all
     - vagrant-libvirt-box
     - release
+    - release-vagrant-libvirt-box

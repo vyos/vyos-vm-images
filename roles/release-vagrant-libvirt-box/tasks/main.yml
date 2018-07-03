@@ -1,0 +1,21 @@
+- name: Set box version
+  set_fact:
+    box_version: "{{ vyos_version.split('-')[2][0:8] }}.{{ vyos_version.split('-')[2][8:10] }}.{{ vyos_version.split('-')[2][10:12] }}"
+  when: vyos_images_dir is defined and vyos_vagrant_box_base_url is defined
+- name: Create the box version
+  uri:
+    url: "https://app.vagrantup.com/api/v1/box/{{ vyos_vagrant_box_name }}/versions?access_token={{ vyos_vagrant_cloud_access_token }}"
+    method: POST
+    body: "version[version]={{ box_version }}"
+  when: vyos_images_dir is defined and vyos_vagrant_box_base_url is defined and vyos_vagrant_cloud_access_token is defined
+- name: Create the box provider
+  uri:
+    url: "https://app.vagrantup.com/api/v1/box/{{ vyos_vagrant_box_name }}/version/{{ box_version }}/providers?access_token={{ vyos_vagrant_cloud_access_token }}"
+    method: POST
+    body: "provider[name]=libvirt&provider[url]={{ vyos_vagrant_box_base_url }}/vyos-{{ vyos_version }}-vagrant-libvirt.box"
+  when: vyos_images_dir is defined and vyos_vagrant_box_base_url is defined and vyos_vagrant_cloud_access_token is defined
+- name: Release the box
+  uri:
+    url: "https://app.vagrantup.com/api/v1/box/{{ vyos_vagrant_box_name }}/version/{{ box_version }}/release?access_token={{ vyos_vagrant_cloud_access_token }}"
+    method: PUT
+  when: vyos_images_dir is defined and vyos_vagrant_box_base_url is defined and vyos_vagrant_cloud_access_token is defined
