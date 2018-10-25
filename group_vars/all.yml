@@ -12,7 +12,7 @@ vyos_write_root: /mnt/wroot
 vyos_read_root: /mnt/squashfs
 vyos_install_root: /mnt/inst_root
 
-vyos_disk_size: 1
+vyos_disk_size: 10
 vyos_root_fstype: ext4
 
 vyos_target_drive: ""
