@@ -117,6 +117,33 @@
       <Product>VyOS</Product>
       <Vendor>VyOS maintainers and contributors</Vendor>
       <Version>{{ vyos_version }}</Version>
+      <Property ovf:key="instance-id" ovf:type="string" ovf:userConfigurable="true" ovf:value="id-ovf">
+          <Label>A Unique Instance ID for this instance</Label>
+          <Description>Specifies the instance id.  This is required and used to determine if the machine should take "first boot" actions</Description>
+      </Property>
+      <Property ovf:key="hostname" ovf:type="string" ovf:userConfigurable="true" ovf:value="vyos">
+          <Description>Specifies the hostname for the appliance</Description>
+      </Property>
+      <Property ovf:key="seedfrom" ovf:type="string" ovf:userConfigurable="true"> 
+          <Label>Url to seed instance data from</Label>
+          <Description>This field is optional, but indicates that the instance should 'seed' user-data and meta-data from the given url.  If set to 'http://tinyurl.com/sm-' is given, meta-data will be pulled from http://tinyurl.com/sm-meta-data and user-data from http://tinyurl.com/sm-user-data.  Leave this empty if you do not want to seed from a url.</Description>
+      </Property>
+      <Property ovf:key="public-keys" ovf:type="string" ovf:userConfigurable="true" ovf:value="">
+          <Label>ssh public keys</Label>
+          <Description>This field is optional, but indicates that the instance should populate the default user's 'authorized_keys' with this value</Description>
+      </Property>
+      <Property ovf:key="user-data" ovf:type="string" ovf:userConfigurable="true" ovf:value="">
+          <Label>Encoded user-data</Label>
+          <Description>In order to fit into a xml attribute, this value is base64 encoded . It will be decoded, and then processed normally as user-data.</Description>
+          <!--  The following represents '#!/bin/sh\necho "hi world"'
+          ovf:value="IyEvYmluL3NoCmVjaG8gImhpIHdvcmxkIgo="
+          -->
+      </Property>
+      <Property ovf:key="password" ovf:type="string" ovf:userConfigurable="true" ovf:value="">
+          <Label>Default User's password</Label>
+          <Description>If set, the default user's password will be set to this value to allow password based login.  The password will be good for only a single login.  If set to the string 'RANDOM' then a random password will be generated, and written to the console.</Description>
+      </Property>
+    </ProductSection>
     </ProductSection>
   </VirtualSystem>
 </Envelope>
