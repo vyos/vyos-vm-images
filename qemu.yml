@@ -21,6 +21,7 @@
     - install-config
     - install-grub
     - install-persistence-conf
+    - install-cloud-init
     - unmount-all
     - qemu-qcow2
     - release

@@ -1,0 +1,33 @@
+- name: Put debian.list
+  become: true
+  copy:
+    src: files/debian.list
+    dest: "{{ vyos_install_root }}/etc/apt/sources.list.d/debian.list"
+- name: apt-get update
+  become: true
+  command: chroot {{ vyos_install_root }} apt-get update
+- name: Install cloud-init
+  become: true
+  command: chroot {{ vyos_install_root }} apt-get install -y cloud-init cloud-utils
+- name: apt-get clean
+  become: true
+  command: chroot {{ vyos_install_root }} apt-get clean
+- name: Delete debian.list
+  become: true
+  file:
+    path: "{{ vyos_install_root }}/etc/apt/sources.list.d/debian.list"
+    state: absent
+- name: Create cfg.d dir
+  become: true
+  file:
+    path: "{{ vyos_install_root }}/etc/cloud/cloud.cfg.d/"
+    state: directory
+    mode: 0755
+- name: Put datasource_list.cfg
+  become: true
+  copy:
+    src: "files/{{ vyos_platform | lower }}.cfg"
+    dest: "{{ vyos_install_root }}/etc/cloud/cloud.cfg.d/90_dpkg.cfg"
+- name: run dpkg-reconfigure cloud-init
+  become: true
+  command: chroot {{ vyos_install_root }} dpkg-reconfigure -f noninteractive cloud-init
