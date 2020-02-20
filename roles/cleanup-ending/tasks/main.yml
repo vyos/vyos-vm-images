@@ -1,0 +1,4 @@
+- name: Delete RAW image
+  file:
+    path: "{{ vyos_raw_img }}"
+    state: absent

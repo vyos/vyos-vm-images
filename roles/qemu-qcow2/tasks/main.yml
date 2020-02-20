@@ -1,2 +1,2 @@
 - name: Convert raw to qcow2
-  command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O qcow2 "{{ vyos_qemu_img }}"
+  command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O qcow2 -c "{{ vyos_qemu_img }}"

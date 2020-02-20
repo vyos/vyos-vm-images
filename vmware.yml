@@ -8,6 +8,9 @@
     vyos_vmdk_size: 10
     vyos_vmware_ova: /tmp/vyos_vmware_image.ova
     vyos_output_img: "{{ vyos_vmware_ova }}"
+    cloud_init: "true"
+    cloud_init_ds_string: "{{ cloud_init_ds | default('OVF,None') }}"
+    cloud_init_ds_list: "{{ cloud_init_ds_string.split(',') }}"
   roles:
     - install-packages
     - load-modules
@@ -22,7 +25,7 @@
     - install-config
     - install-grub
     - install-persistence-conf
-    - install-cloud-init
+    - install-cloud-init-wrapper
     - unmount-all
     - install-open-vmdk
     - vmware-ova

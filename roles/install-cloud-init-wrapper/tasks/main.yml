@@ -1,0 +1,12 @@
+- name: Check if we need to install Cloud-Init
+  include_role:
+    name: install-cloud-init
+  when: cloud_init == "true"
+- name: Set Cloud-Init tag for image file name
+  set_fact:
+    ci_tag: "-cloud-init"
+  when: cloud_init == "true"
+# - name: Set empty Cloud-Init tag for image file name
+#   set_fact:
+#     ci_tag: ""
+#   when: cloud_init == "false"

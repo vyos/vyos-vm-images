@@ -9,4 +9,8 @@
       - qemu-utils
       - python-lxml
       - aufs-tools
+      - grub2
+      - python-requests
+      - unzip
+      - zlib1g-dev
     state: present

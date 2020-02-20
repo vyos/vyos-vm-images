@@ -58,6 +58,10 @@
     fstype: "{{ vyos_root_fstype }}"
     state: absent
 
+- name: Detach {{ vyos_target_drive }}
+  become: true
+  command: "losetup -d {{ vyos_target_drive }}"
+
 - name: Unmount {{ vyos_cd_squash_root }}
   become: true
   mount:

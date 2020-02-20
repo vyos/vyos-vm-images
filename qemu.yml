@@ -5,8 +5,11 @@
   vars:
     vyos_platform: QEMU
     vyos_format: qcow2
-    vyos_qemu_img: /tmp/vyos_qemu_image.qcow2
+    vyos_qemu_img: "/tmp/vyos-{{ vyos_version }}{{ ci_tag  | default() }}-qemu.qcow2"
     vyos_output_img: "{{ vyos_qemu_img }}"
+    cloud_init: "false"
+    cloud_init_ds_string: "{{ cloud_init_ds | default('NoCloud,ConfigDrive,None') }}"
+    cloud_init_ds_list: "{{ cloud_init_ds_string.split(',') }}"
   roles:
     - install-packages
     - load-modules
@@ -21,7 +24,9 @@
     - install-config
     - install-grub
     - install-persistence-conf
-    - install-cloud-init
+    - install-cloud-init-wrapper
+    - fstrim
     - unmount-all
     - qemu-qcow2
+    - cleanup-ending
     - release

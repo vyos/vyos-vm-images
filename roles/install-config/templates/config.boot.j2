@@ -1,14 +1,13 @@
-service {
-    ssh {
-        port 22
-    }
-}
 system {
     host-name vyos
     login {
         user vyos {
             authentication {
+{% if cloud_init == "true" %}
+                encrypted-password "*"
+{% else %}
                 encrypted-password "$6$MjV2YvKQ56q$QbL562qhRoyUu8OaqrXagicvcsNpF1HssCY06ZxxghDJkBCfSfTE/4FlFB41xZcd/HqYyVBuRt8Zyq3ozJ0dc."
+{% endif %}
                 plaintext-password ""
             }
             level admin
@@ -34,8 +33,18 @@ system {
     }
 }
 interfaces {
+{% if cloud_init == "true" %}
     ethernet eth0 {
         address dhcp
     }
-    loopback lo
+{% endif %}
+    loopback lo {
+    }
 }
+{% if cloud_init == "true" %}
+service {
+    ssh {
+        port 22
+    }
+}
+{% endif %}
