@@ -26,6 +26,7 @@
     - install-grub
     - install-persistence-conf
     - install-cloud-init-wrapper
+    - unmount-pre
     - unmount-all
     - hyperv-vhd
     - release

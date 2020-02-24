@@ -1,0 +1,38 @@
+# Create an archive with files, required for PXE
+- name: Create directory for PXE files
+  become: true
+  file:
+    path: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}"
+    state: directory
+  when:
+    - pxe is defined
+    - pxe == "true"
+
+- name: Save files required for PXE boot
+  become: true
+  copy:
+    src: "{{ vyos_write_root }}/boot/{{ vyos_version }}/{{ item }}"
+    dest: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}/{{ item }}"
+  with_items:
+    - initrd.img
+    - vmlinuz
+  when:
+    - pxe is defined
+    - pxe == "true"
+
+- name: Create new squashfs image
+  become: true
+  command: "mksquashfs {{ vyos_install_root }} /tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}/filesystem.squashfs -comp gzip -no-progress -Xcompression-level 9 -e {{ vyos_install_root }}/boot -e {{ vyos_install_root }}/usr/lib/python3/dist-packages/cloudinit/config/cc_vyos.py"
+  when:
+    - pxe is defined
+    - pxe == "true"
+
+- name: Create an archive with files for PXE
+  become: true
+  archive:
+    path: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}"
+    format: gz
+    dest: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}.tgz"
+  when:
+    - pxe is defined
+    - pxe == "true"

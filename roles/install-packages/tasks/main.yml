@@ -13,4 +13,5 @@
       - python-requests
       - unzip
       - zlib1g-dev
+      - squashfs-tools
     state: present

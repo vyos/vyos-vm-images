@@ -87,3 +87,15 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     ```
     -e cloud_init_ds=NoCloud,ConfigDrive,None
     ```
+
+- Create an archive with files required to PXE boot (default: false):
+
+    ```
+    -e pxe=true
+    ```
+
+- Keep default `vyos` user with password `vyos` in configuration when building an image with Cloud-init (default: false):
+
+    ```
+    -e keep_user=true
+    ```

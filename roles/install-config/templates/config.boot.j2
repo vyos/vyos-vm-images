@@ -3,7 +3,7 @@ system {
     login {
         user vyos {
             authentication {
-{% if cloud_init == "true" %}
+{% if cloud_init == "true" and not ( keep_user is defined and keep_user == "true" ) %}
                 encrypted-password "*"
 {% else %}
                 encrypted-password "$6$MjV2YvKQ56q$QbL562qhRoyUu8OaqrXagicvcsNpF1HssCY06ZxxghDJkBCfSfTE/4FlFB41xZcd/HqYyVBuRt8Zyq3ozJ0dc."

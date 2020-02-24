@@ -26,6 +26,8 @@
     - install-persistence-conf
     - install-cloud-init-wrapper
     - fstrim
+    - unmount-pre
+    - create-pxe-archive
     - unmount-all
     - qemu-qcow2
     - cleanup-ending

@@ -30,7 +30,7 @@
   command: chroot {{ vyos_install_root }} apt-get clean
 - name: delete apt lists from cache
   become: true
-  command: chroot {{ vyos_install_root }} rm -rf /var/lib/apt/lists/*
+  command: chroot {{ vyos_install_root }} rm -rf /var/lib/apt/lists/
 - name: Delete debian.list
   become: true
   file:

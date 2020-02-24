@@ -1,0 +1,18 @@
+# Unmount /sys /proc /dev
+- name: Unmount {{ vyos_install_root }}/sys, {{ vyos_install_root }}/proc, {{ vyos_install_root }}/dev
+  become: true
+  mount:
+    name: "{{ vyos_install_root }}/{{ item }}"
+    src: "/{{ item }}"
+    fstype: none
+    state: unmounted
+  with_items: [ 'sys', 'proc', 'dev' ]
+
+- name: Unmount {{ vyos_install_root }}/sys, {{ vyos_install_root }}/proc, {{ vyos_install_root }}/dev
+  become: true
+  mount:
+    name: "{{ vyos_install_root }}/{{ item }}"
+    src: "/{{ item }}"
+    fstype: none
+    state: absent
+  with_items: [ 'sys', 'proc', 'dev' ]
