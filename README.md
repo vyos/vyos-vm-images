@@ -99,3 +99,8 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     ```
     -e keep_user=true
     ```
+
+- Exclude the `cc_vyos` module from Cloud-init in the PXE archive. Mostly useful when you are building for non-cloud environments, where Cloud-init meta-data is not available (default: false):
+    ```
+    -e pxe_excl_module=true
+    ```

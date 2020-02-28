@@ -27,6 +27,15 @@
   when:
     - pxe is defined
     - pxe == "true"
+    - pxe_excl_module is defined
+    - pxe_excl_module == "true"
+
+- name: Create new squashfs image
+  become: true
+  command: "mksquashfs {{ vyos_install_root }} /tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}/filesystem.squashfs -comp gzip -no-progress -Xcompression-level 9 -e {{ vyos_install_root }}/boot"
+  when:
+    - pxe is defined
+    - pxe == "true"
 
 - name: Add the /boot directory
   become: true
