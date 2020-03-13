@@ -36,6 +36,7 @@
   when:
     - pxe is defined
     - pxe == "true"
+    - pxe_excl_module is not defined
 
 - name: Add the /boot directory
   become: true
