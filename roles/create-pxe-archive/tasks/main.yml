@@ -23,20 +23,10 @@
 # We need to skip boot directory (it contain too much unneeded items) and cc_vyos.py (optionally - may conflict with User-Data handler)
 - name: Create new squashfs image
   become: true
-  command: "mksquashfs {{ vyos_install_root }} /tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}/filesystem.squashfs -comp gzip -no-progress -Xcompression-level 9 -e {{ vyos_install_root }}/boot -e {{ vyos_install_root }}/usr/lib/python3/dist-packages/cloudinit/config/cc_vyos.py"
-  when:
-    - pxe is defined
-    - pxe == "true"
-    - pxe_excl_module is defined
-    - pxe_excl_module == "true"
-
-- name: Create new squashfs image
-  become: true
   command: "mksquashfs {{ vyos_install_root }} /tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}/filesystem.squashfs -comp gzip -no-progress -Xcompression-level 9 -e {{ vyos_install_root }}/boot"
   when:
     - pxe is defined
     - pxe == "true"
-    - pxe_excl_module is not defined
 
 - name: Add the /boot directory
   become: true

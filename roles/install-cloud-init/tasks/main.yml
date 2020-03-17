@@ -50,9 +50,18 @@
 - name: run dpkg-reconfigure cloud-init
   become: true
   command: chroot {{ vyos_install_root }} dpkg-reconfigure -f noninteractive cloud-init
+- name: Disable config-stage modules
+  become: true
+  copy:
+    src: "files/90_disable_config_stage.cfg"
+    dest: "{{ vyos_install_root }}/etc/cloud/cloud.cfg.d/90_disable_config_stage.cfg"
+  when:
+    - cloud_init_disable_config is defined
+    - cloud_init_disable_config == "true"
 - name: restore original resolv.conf
   become: true
   command: mv /tmp/resolv.conf {{ vyos_install_root }}/etc/resolv.conf
 - name: change /etc/network/interfaces to include config from Cloud-Init
   become: true
   command: chroot {{ vyos_install_root }} sed -i 's/source-directory \/etc\/network\/interfaces.d/source \/etc\/network\/interfaces.d\/*/g' /etc/network/interfaces
+  when: vyos_version is regex("^1\.2.*$")
