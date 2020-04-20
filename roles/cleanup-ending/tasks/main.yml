@@ -10,3 +10,8 @@
   when:
     - pxe is defined
     - pxe == "true"
+
+- name: Delete Release key
+  file:
+    path: "{{ vyos_key_local }}"
+    state: absent

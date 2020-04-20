@@ -2,6 +2,10 @@
   command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O vmdk -o adapter_type=lsilogic "{{ vyos_vmware_tmp_vmdk }}"
 - name: Fix vmdk with open-vmdk
   command: vmdk-convert "{{ vyos_vmware_tmp_vmdk }}" "{{ vyos_vmware_vmdk }}"
+- name: Delete temporary image
+  file:
+    path: "{{ vyos_vmware_tmp_vmdk }}"
+    state: absent
 - name: Get vmdk_file_size
   shell: du --bytes "{{ vyos_vmware_vmdk }}" | cut -f1
   register: vmdk_file_size
@@ -26,42 +30,14 @@
   copy:
     dest: "{{ vyos_vmware_mf }}"
     content: "{{ result.stdout }}"
-- name: Create OVA without private key
+- name: Converting the OVF to signed OVA
   become: false
-  archive:
-    path:
-      - "{{ vyos_vmware_ovf }}"
-      - "{{ vyos_vmware_mf }}"
-      - "{{ vyos_vmware_vmdk }}"
-    dest: "{{ vyos_vmware_ova }}"
-    format: tar
-  when: vyos_vmware_private_key_path is not defined
-- name: Sign MF
-  shell: openssl dgst -sha256 -sign "{{ vyos_vmware_private_key_path }}" -hex "{{ vyos_vmware_mf | basename }}" | sed 's/^RSA-//'
-  args:
-    chdir: /tmp
-  register: signature
-  when: vyos_vmware_private_key_path is defined
-- name: Get certificate
-  shell: openssl x509 -in "{{ vyos_vmware_private_key_path }}"
-  register: certificate
-  when: vyos_vmware_private_key_path is defined
-- name: Create cert file for OVA
-  become: false
-  copy:
-    dest: "{{ vyos_vmware_cert }}"
-    content: |
-      {{ signature.stdout }}
-      {{ certificate.stdout }}
-  when: vyos_vmware_private_key_path is defined
-- name: Create OVA with private key
-  become: false
-  archive:
-    path:
-      - "{{ vyos_vmware_ovf }}"
-      - "{{ vyos_vmware_mf }}"
-      - "{{ vyos_vmware_cert }}"
-      - "{{ vyos_vmware_vmdk }}"
-    dest: "{{ vyos_vmware_ova }}"
-    format: tar
-  when: vyos_vmware_private_key_path is defined
+  command: "ovftool --compress=9 --privateKey={{ vyos_vmware_private_key_path }} {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
+- name: Delete temporary files for VMware
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ vyos_vmware_ovf }}"
+    - "{{ vyos_vmware_mf }}"
+    - "{{ vyos_vmware_vmdk }}"

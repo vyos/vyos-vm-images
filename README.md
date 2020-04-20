@@ -11,6 +11,12 @@ sudo apt update
 sudo apt install -y ansible python
 ```
 
+If you want to build an OVA image, you also need `ovftool` from VMware. It should be downloaded from the [VMware site](https://code.vmware.com/tool/ovf). Also, you need a private key to sign an OVA file. It can be generated with the next command:
+
+```
+openssl req -x509 -nodes -sha256 -days 365 -newkey rsa:1024 -keyout myself.pem -out myself.pem
+```
+
 All other requirements will be installed by ansible-playbook.
 
 
@@ -29,7 +35,6 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
 - VMware
 
     ```
-    ansible-playbook vmware.yml
     ansible-playbook vmware.yml -e vyos_vmware_private_key_path=path_to_private_key
     ```
 

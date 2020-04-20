@@ -2,7 +2,7 @@ ansible_host_key_checking: False
 
 vyos_iso_url: ""
 vyos_iso_local: "{{ iso_local | default('/tmp/vyos.iso') }}"
-vyos_key_url: http://packages.vyos.net/vyos-release.gpg
+vyos_key_url: https://downloads.vyos.io/vyos-release.gpg
 vyos_key_local: /tmp/vyos-release.gpg
 
 vyos_cd_root: /mnt/cdrom
@@ -17,3 +17,4 @@ vyos_root_fstype: ext4
 
 vyos_target_drive: ""
 vyos_raw_img: /tmp/vyos_raw_image.img
+grub_console: "kvm"
