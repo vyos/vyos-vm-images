@@ -33,7 +33,7 @@ system {
     }
 }
 interfaces {
-{% if cloud_init == "true" %}
+{% if cloud_init == "true" and not ( empty_config is defined and empty_config == "true" ) %}
     ethernet eth0 {
         address dhcp
     }
@@ -41,7 +41,7 @@ interfaces {
     loopback lo {
     }
 }
-{% if cloud_init == "true" %}
+{% if cloud_init == "true" and not ( empty_config is defined and empty_config == "true" ) %}
 service {
     ssh {
         port 22

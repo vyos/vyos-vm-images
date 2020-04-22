@@ -109,3 +109,9 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     ```
     -e keep_user=true
     ```
+
+- Create an image with empty configuration, do not add any default settings like eth0 address, SSH service (default: false):
+
+    ```
+    -e empty_config=true
+    ```
