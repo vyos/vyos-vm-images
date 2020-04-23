@@ -20,7 +20,7 @@
 
 - name: Install GRUB in the boot sector of {{ vyos_target_drive }}
   become: true
-  command: chroot {{ vyos_install_root }} grub-install --no-floppy --root-directory=/boot {{ vyos_target_drive }} --force
+  command: chroot {{ vyos_install_root }} grub-install --no-floppy --root-directory=/boot {{ vyos_target_drive }} --force --target=i386-pc
   args:
     creates: "{{ vyos_install_root }}/boot/grub/grubenv"
 

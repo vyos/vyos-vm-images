@@ -8,6 +8,9 @@
     vyos_format: vhd
     vyos_hyperv_img: /tmp/vyos_hyperv_image.vhd
     vyos_output_img: "{{ vyos_hyperv_img }}"
+    cloud_init: "true"
+    cloud_init_ds_string: "{{ cloud_init_ds | default('NoCloud, ConfigDrive, None') }}"
+    cloud_init_ds_list: "{{ cloud_init_ds_string.split(',') }}"
   roles:
     - install-packages
     - load-modules
@@ -22,7 +25,8 @@
     - install-config
     - install-grub
     - install-persistence-conf
-    - install-cloud-init
+    - install-cloud-init-wrapper
+    - unmount-pre
     - unmount-all
     - hyperv-vhd
     - release

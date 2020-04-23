@@ -22,9 +22,14 @@
 - name: apt-get update
   become: true
   command: chroot {{ vyos_install_root }} apt-get update
-- name: Install cloud-init
+- name: Install qemu-guest-agent
   become: true
-  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y cloud-init cloud-utils
+  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y qemu-guest-agent
+  when: guest_agent == "qemu"
+- name: Install open-vm-tools
+  become: true
+  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y open-vm-tools
+  when: guest_agent == "vmware"
 - name: apt-get clean
   become: true
   command: chroot {{ vyos_install_root }} apt-get clean
@@ -36,32 +41,6 @@
   file:
     path: "{{ vyos_install_root }}/etc/apt/sources.list.d/debian.list"
     state: absent
-- name: Create cfg.d dir
-  become: true
-  file:
-    path: "{{ vyos_install_root }}/etc/cloud/cloud.cfg.d/"
-    state: directory
-    mode: 0755
-- name: Put datasource_list.cfg
-  become: true
-  template:
-    src: 90_dpkg.cfg.j2
-    dest: "{{ vyos_install_root }}/etc/cloud/cloud.cfg.d/90_dpkg.cfg"
-- name: run dpkg-reconfigure cloud-init
-  become: true
-  command: chroot {{ vyos_install_root }} dpkg-reconfigure -f noninteractive cloud-init
-- name: Disable config-stage modules
-  become: true
-  copy:
-    src: "files/90_disable_config_stage.cfg"
-    dest: "{{ vyos_install_root }}/etc/cloud/cloud.cfg.d/90_disable_config_stage.cfg"
-  when:
-    - cloud_init_disable_config is defined
-    - cloud_init_disable_config == "true"
 - name: restore original resolv.conf
   become: true
   command: mv /tmp/resolv.conf {{ vyos_install_root }}/etc/resolv.conf
-- name: change /etc/network/interfaces to include config from Cloud-Init
-  become: true
-  command: chroot {{ vyos_install_root }} sed -i 's/source-directory \/etc\/network\/interfaces.d/source \/etc\/network\/interfaces.d\/*/g' /etc/network/interfaces
-  when: vyos_version is regex("^1\.2.*$")

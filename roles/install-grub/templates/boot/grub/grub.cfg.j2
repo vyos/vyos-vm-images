@@ -1,7 +1,29 @@
+{% if grub_console == "kvm" %}
 set default=0
-set timeout=0
+{% elif grub_console == "serial" %}
+set default=1
+{% endif %}
+set timeout=5
+serial --unit=0
+terminal_output --append serial
+terminal_input serial console
 
-menuentry "VyOS {{ vyos_platform }} Image {{ vyos_version }}" {
-  linux /boot/{{ vyos_version }}/vmlinuz boot=live selinux=0 vyos-union=/boot/{{ vyos_version }} console=tty1
+menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} (KVM console)" {
+  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=ttyS0 console=tty0
+  initrd /boot/{{ vyos_version }}/initrd.img
+}
+
+menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} (Serial console)" {
+  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=tty0 console=ttyS0
+  initrd /boot/{{ vyos_version }}/initrd.img
+}
+
+menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} - password reset (KVM console)" {
+  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=ttyS0 console=tty0 init=/opt/vyatta/sbin/standalone_root_pw_reset
+  initrd /boot/{{ vyos_version }}/initrd.img
+}
+
+menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} - password reset (Serial console)" {
+  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=tty0 console=ttyS0 init=/opt/vyatta/sbin/standalone_root_pw_reset
   initrd /boot/{{ vyos_version }}/initrd.img
 }

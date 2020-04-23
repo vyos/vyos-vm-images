@@ -4,9 +4,9 @@
     path: "{{ vyos_install_root }}/opt/vyatta/etc/config/.vyatta_config"
     state: touch
 
-- name: Copy the default config for QEMU to the installed image
+- name: Copy config to the installed image
   become: true
-  copy:
-    src: files/config.boot
+  template:
+    src: config.boot.j2
     dest: "{{ vyos_install_root }}/opt/vyatta/etc/config/config.boot"
     mode: 0755

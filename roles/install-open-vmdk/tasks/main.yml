@@ -7,14 +7,27 @@
     url: https://github.com/vmware/open-vmdk/archive/master.zip
     dest: /tmp/master.zip
   when: stat_result.stat.exists == False
-- name: Extract master.zip into /var/lib/foo
+- name: Extract master.zip into /tmp
   unarchive:
     src: /tmp/master.zip
     dest: /tmp
   when: stat_result.stat.exists == False
+- name: Build open-vmdk
+  become: true
+  make:
+    chdir: /tmp/open-vmdk-master/vmdk
+  when: stat_result.stat.exists == False
 - name: Install open-vmdk
   become: true
   make:
-    chdir: /tmp/open-vmdk-master
+    chdir: /tmp/open-vmdk-master/vmdk
     target: install
+  when: stat_result.stat.exists == False
+- name: Delete installation directory and archive
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/tmp/open-vmdk-master"
+    - "/tmp/master.zip"
   when: stat_result.stat.exists == False

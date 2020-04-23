@@ -22,6 +22,7 @@
     - install-config
     - install-grub
     - install-persistence-conf
+    - unmount-pre
     - unmount-all
     - vagrant-libvirt-box
     - release

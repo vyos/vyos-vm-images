@@ -16,24 +16,6 @@
     fstype: none
     state: absent
 
-- name: Unmount {{ vyos_install_root }}/sys, {{ vyos_install_root }}/proc, {{ vyos_install_root }}/dev
-  become: true
-  mount:
-    name: "{{ vyos_install_root }}/{{ item }}"
-    src: "/{{ item }}"
-    fstype: none
-    state: unmounted
-  with_items: [ 'sys', 'proc', 'dev' ]
-
-- name: Unmount {{ vyos_install_root }}/sys, {{ vyos_install_root }}/proc, {{ vyos_install_root }}/dev
-  become: true
-  mount:
-    name: "{{ vyos_install_root }}/{{ item }}"
-    src: "/{{ item }}"
-    fstype: none
-    state: absent
-  with_items: [ 'sys', 'proc', 'dev' ]
-
 - name: Unmount {{ vyos_install_root }}
   become: true
   mount:
@@ -57,6 +39,10 @@
     src: "{{ vyos_target_drive }}"
     fstype: "{{ vyos_root_fstype }}"
     state: absent
+
+- name: Detach {{ vyos_target_drive }}
+  become: true
+  command: "losetup -d {{ vyos_target_drive }}"
 
 - name: Unmount {{ vyos_cd_squash_root }}
   become: true

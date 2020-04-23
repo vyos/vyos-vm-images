@@ -1,0 +1,17 @@
+- name: Delete RAW image
+  file:
+    path: "{{ vyos_raw_img }}"
+    state: absent
+
+- name: Delete PXE folder
+  file:
+    path: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}"
+    state: absent
+  when:
+    - pxe is defined
+    - pxe == "true"
+
+- name: Delete Release key
+  file:
+    path: "{{ vyos_key_local }}"
+    state: absent

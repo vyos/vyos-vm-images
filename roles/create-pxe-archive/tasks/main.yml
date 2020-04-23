@@ -1,0 +1,46 @@
+# Create an archive with files, required for PXE
+- name: Create directory for PXE files
+  become: true
+  file:
+    path: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}"
+    state: directory
+  when:
+    - pxe is defined
+    - pxe == "true"
+
+- name: Save files required for PXE boot
+  become: true
+  copy:
+    src: "{{ vyos_write_root }}/boot/{{ vyos_version }}/{{ item }}"
+    dest: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}/{{ item }}"
+  with_items:
+    - initrd.img
+    - vmlinuz
+  when:
+    - pxe is defined
+    - pxe == "true"
+
+# We need to skip boot directory (it contain too much unneeded items) and cc_vyos.py (optionally - may conflict with User-Data handler)
+- name: Create new squashfs image
+  become: true
+  command: "mksquashfs {{ vyos_install_root }} /tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}/filesystem.squashfs -comp gzip -no-progress -Xcompression-level 9 -e {{ vyos_install_root }}/boot"
+  when:
+    - pxe is defined
+    - pxe == "true"
+
+- name: Add the /boot directory
+  become: true
+  command: "mksquashfs {{ vyos_read_root }}/boot /tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}/filesystem.squashfs -keep-as-directory -comp gzip -no-progress -Xcompression-level 9"
+  when:
+    - pxe is defined
+    - pxe == "true"
+
+- name: Create an archive with files for PXE
+  become: true
+  archive:
+    path: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}"
+    format: gz
+    dest: "/tmp/vyos-pxe-{{ vyos_version }}{{ ci_tag  | default() }}.tgz"
+  when:
+    - pxe is defined
+    - pxe == "true"
