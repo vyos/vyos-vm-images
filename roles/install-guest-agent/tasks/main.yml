@@ -1,0 +1,46 @@
+- name: Get Debian version
+  become: true
+  command: chroot {{ vyos_install_root }} awk 'match($0, /VERSION=.*\((\w+)\)/, version) { print version[1] }' /etc/os-release
+  register: debian_version
+- name: Set VyOS branch name crux
+  set_fact:
+    vyos_branch: "crux"
+  when: vyos_version is regex("^1\.2.*$")
+- name: Put debian.list
+  become: true
+  copy:
+    src: "files/debian.list.{{ debian_version.stdout }}"
+    dest: "{{ vyos_install_root }}/etc/apt/sources.list.d/debian.list"
+- name: backup resolv.conf
+  become: true
+  command: mv {{ vyos_install_root }}/etc/resolv.conf /tmp/resolv.conf
+- name: add nameserver settings to chroot
+  become: true
+  copy:
+    src: "files/resolv.conf"
+    dest: "{{ vyos_install_root }}/etc/resolv.conf"
+- name: apt-get update
+  become: true
+  command: chroot {{ vyos_install_root }} apt-get update
+- name: Install qemu-guest-agent
+  become: true
+  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y qemu-guest-agent
+  when: guest_agent == "qemu"
+- name: Install open-vm-tools
+  become: true
+  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y open-vm-tools
+  when: guest_agent == "vmware"
+- name: apt-get clean
+  become: true
+  command: chroot {{ vyos_install_root }} apt-get clean
+- name: delete apt lists from cache
+  become: true
+  command: chroot {{ vyos_install_root }} rm -rf /var/lib/apt/lists/
+- name: Delete debian.list
+  become: true
+  file:
+    path: "{{ vyos_install_root }}/etc/apt/sources.list.d/debian.list"
+    state: absent
+- name: restore original resolv.conf
+  become: true
+  command: mv /tmp/resolv.conf {{ vyos_install_root }}/etc/resolv.conf

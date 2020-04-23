@@ -1,0 +1,4 @@
+- name: Check if we need to install VM guest agents
+  include_role:
+    name: install-guest-agent
+  when: guest_agent is defined

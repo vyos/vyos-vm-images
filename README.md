@@ -93,6 +93,17 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     -e cloud_init_ds=NoCloud,ConfigDrive,None
     ```
 
+- Install guest agent. It can be `qemu`, `vmware` (default: none):
+
+    ```
+    -e guest_agent=agent
+    ```
+
+    Example:
+    ```
+    -e guest_agent=qemu
+    ```
+
 - Disable configuration stage modules in Cloud-init. Mostly useful when you are building for non-cloud environments, where Cloud-init meta-data is not available (default: false):
     ```
     -e cloud_init_disable_config=true

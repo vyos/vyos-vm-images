@@ -25,6 +25,7 @@
     - install-grub
     - install-persistence-conf
     - install-cloud-init-wrapper
+    - install-guest-agent-wrapper
     - fstrim
     - unmount-pre
     - create-pxe-archive
