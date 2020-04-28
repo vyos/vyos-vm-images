@@ -1,7 +1,8 @@
+
 - name: Create GRUB directory
   become: true
   file:
-    path: "{{ vyos_write_root }}/boot/grub"
+    path: "{{ vyos_install_root }}/boot/grub"
     state: directory
 
 # It is necessary to mount and bind /dev, /proc, /sys and /boot in order to execute grub-install
@@ -14,15 +15,27 @@
   shell: mount --bind /dev {{ vyos_install_root }}/dev &&
          mount --bind /proc {{ vyos_install_root }}/proc &&
          mount --bind /sys {{ vyos_install_root }}/sys &&
-         mount --bind {{ vyos_write_root }} {{ vyos_install_root }}/boot
+         mount --bind {{ vyos_write_root }} {{ vyos_install_root }}/boot 
   args:
     warn: no
 
+
+- name: Mount EFI
+  mount:
+      src: "{{ vyos_target_drive }}p2"
+      path: "{{ vyos_install_root }}/boot/efi"
+      fstype: vfat
+      state: mounted
+
 - name: Install GRUB in the boot sector of {{ vyos_target_drive }}
   become: true
-  command: chroot {{ vyos_install_root }} grub-install --no-floppy --root-directory=/boot {{ vyos_target_drive }} --force --target=i386-pc
+  command: "chroot {{ vyos_install_root }} grub-install --no-floppy --root-directory=/boot {{ vyos_grub_drive }} --force" 
   args:
-    creates: "{{ vyos_install_root }}/boot/grub/grubenv"
+      creates: "{{ vyos_install_root }}/boot/grub/grubenv"
+
+- name: Install EFI GRUB to {{ vyos_target_drive }}p2
+  become: true
+  command: "chroot {{ vyos_install_root }} grub-install --no-floppy --recheck --target=x86_64-efi --force-extra-removable --root-directory=/boot --efi-directory=/boot/efi --bootloader-id='VyOS' --no-uefi-secure-boot"
 
 - name: Configure GRUB
   become: true
@@ -30,3 +43,11 @@
     src: templates/boot/grub/grub.cfg.j2
     dest: "{{ vyos_write_root }}/boot/grub/grub.cfg"
     mode: 0644
+
+- name: Unmount EFI
+  mount:
+      src: "{{ vyos_target_drive }}p2"
+      path: "{{ vyos_install_root }}/boot/efi"
+      fstype: vfat
+      state: absent
+

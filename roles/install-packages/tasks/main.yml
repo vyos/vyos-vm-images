@@ -3,13 +3,17 @@
   apt:
     update_cache: true
     name:
-      - parted
+      - gdisk
+      - kpartx
+      - dosfstools
       - e2fsprogs
       - gnupg
       - qemu-utils
       - python-lxml
       - aufs-tools
-      - grub2
+      - grub-efi-amd64
+      - grub-efi-amd64-bin
+      - grub-common
       - python-requests
       - unzip
       - zlib1g-dev

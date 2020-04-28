@@ -7,6 +7,8 @@ set timeout=5
 serial --unit=0
 terminal_output --append serial
 terminal_input serial console
+insmod efi_gop
+insmod efi_uga
 
 menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} (KVM console)" {
   linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=ttyS0 console=tty0
