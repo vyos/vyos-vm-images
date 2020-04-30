@@ -58,6 +58,14 @@
   when:
     - cloud_init_disable_config is defined
     - cloud_init_disable_config == "true"
+- name: Disable cloud-init network config
+  become: true
+  copy:
+    src: "files/90_disable_network_config.cfg"
+    dest: "{{ vyos_install_root }}/etc/cloud/cloud.cfg.d/90_disable_network_config.cfg"
+  when:
+    - cloud_init_disable_network_config is defined
+    - cloud_init_disable_network_config == "true"
 - name: restore original resolv.conf
   become: true
   command: mv /tmp/resolv.conf {{ vyos_install_root }}/etc/resolv.conf

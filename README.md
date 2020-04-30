@@ -132,3 +132,9 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     ```
     -e grub_console=kvm
     ```
+
+- Disable cloud-inits network config. This is helpful, when you want to configure the network interfaces via other methods than cloud inits networking stage (default: false)
+
+    ```
+    -e cloud_init_disable_network_config=true
+    ```
