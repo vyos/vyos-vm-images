@@ -1,2 +1,2 @@
-- name: Convert raw to vhd
-  command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O vpc "{{ vyos_hyperv_img }}"
+- name: Convert raw to "{{ vyos_format }}"
+  command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O "{{ vyos_format }}" -o subformat=dynamic  "{{ vyos_hyperv_img }}"

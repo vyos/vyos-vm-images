@@ -1,27 +1,54 @@
-- name: Partition the target drive
+- name: Partition disk
   become: true
-  parted:
-    device: "{{ vyos_target_drive }}"
-    state: present
-    label: msdos
-    number: 1
-    part_type: primary
-    part_start: 0%
-    part_end: 100%
-    align: optimal
-    flags: [boot]
+  command:
+      cmd: "sgdisk -a1 -n1:34:2047   -t1:EF02 -n2:2048:+256M -t2:EF00 -n3:0:0:+100% -t3:8300 {{ vyos_raw_img }}"
 
-- name: Create a filesystem on root partition
+- name: Create hybrid MBR
+  become: true
+  command:
+      cmd: "sgdisk -h -t1:EF02 -t2:EF00 -t3:8300 {{ vyos_raw_img }}"
+
+- name: Reread partitions from image and mount to loopback
+  become: true
+  command: "kpartx -av  {{ vyos_raw_img }}"
+
+- name: Find the loop device that was used, map to mapper
+  become: true
+  shell: "losetup | grep vyos_raw_image.img | head -n1 | awk '{print $1}' | sed 's/dev/dev\\/mapper/g'"
+  register: result
+
+- name: Set vyos_target_drive.
+  set_fact:
+    vyos_target_drive: "{{ result.stdout }}"
+
+- name: Pull grub drive
+  become: true
+  shell: "losetup | grep vyos_raw_image.img | head -n1 | awk '{print $1}'"
+  register: result
+
+- name: Set vyos_grub_drive.
+  set_fact:
+    vyos_grub_drive: "{{ result.stdout }}"
+
+- name: Create a fileystem on EFI partition
+  become: true
+  filesystem:
+    fstype: "vfat"
+    device: "{{ vyos_target_drive }}p2"
+    opts: "-n EFI -F 32 -s 1"
+ 
+
+- name: Create a fileystem on root partition
   become: true
   filesystem:
     fstype: "{{ vyos_root_fstype }}"
-    device: "{{ vyos_target_drive }}"
+    device: "{{ vyos_target_drive }}p3"
     opts: "-L persistence"
 
 - name: Mount root partition
   become: true
   mount:
     name: "{{ vyos_write_root }}"
-    src: "{{ vyos_target_drive }}"
+    src: "{{ vyos_target_drive }}p3"
     fstype: "{{ vyos_root_fstype }}"
     state: mounted

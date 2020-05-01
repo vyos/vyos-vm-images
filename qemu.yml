@@ -17,7 +17,6 @@
     - mount-iso
     - get-version
     - create-disk
-    - attach-loop-device
     - setup-root-partition
     - install-image
     - mount-root-fs

@@ -40,9 +40,9 @@
     fstype: "{{ vyos_root_fstype }}"
     state: absent
 
-- name: Detach {{ vyos_target_drive }}
+- name: Remove image partitions
   become: true
-  command: "losetup -d {{ vyos_target_drive }}"
+  command: "kpartx -dv {{ vyos_raw_img }}"
 
 - name: Unmount {{ vyos_cd_squash_root }}
   become: true
