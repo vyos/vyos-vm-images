@@ -5,6 +5,7 @@
     src: "{{ vyos_iso_local }}"
     fstype: iso9660
     opts: loop,ro
+    fstab: /tmp/fstab
     state: mounted
 
 - name: Verify checksums of all the files in the ISO image
@@ -20,4 +21,5 @@
     src: "{{ vyos_squashfs_image }}"
     fstype: squashfs
     opts: loop,ro
+    fstab: /tmp/fstab
     state: mounted

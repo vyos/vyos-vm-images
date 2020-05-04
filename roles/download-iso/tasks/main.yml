@@ -6,13 +6,13 @@
 - name: set latest_iso as vyos_iso_url
   set_fact:
     vyos_iso_url: "{{ latest_iso_result.latest_iso }}"
-  when: latest_iso_result is defined
+  when: latest_iso_result is not skipped
 
 - name: Fetch VyOS ISO GPG signature
   uri:
     url: "{{ vyos_iso_url }}.asc"
     dest: "{{ vyos_iso_local }}.asc"
-    status_code: 200,404,403
+    status_code: 200,304,404,403
   tags: verify
   register: gpg_uri
 
@@ -26,13 +26,16 @@
     url: "{{ vyos_key_url}}"
     dest: "{{ vyos_key_local }}"
   tags: verify
+  when: latest_iso_result is not skipped
 
 - name: Install the VyOS release GPG key
   command: gpg --import {{ vyos_key_local }}
   when: gpg_uri.status == 200
   tags: verify
+  when: latest_iso_result is not skipped
 
 - name: Validate ISO GPG signature
   command: gpg --verify {{ vyos_iso_local }}.asc {{ vyos_iso_local }}
   when: gpg_uri.status == 200
   tags: verify
+  when: latest_iso_result is not skipped

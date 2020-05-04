@@ -20,6 +20,13 @@
   template:
     src: templates/vyos_vmware_image.ovf.j2
     dest: "{{ vyos_vmware_ovf }}"
+  when: not simple_ova
+- name: Generate OVF
+  become: false
+  template:
+    src: templates/vyos_vmware_image.ovf.j2
+    dest: "{{ vyos_vmware_ovf }}"
+  when: simple_ova
 - name: Generate MF
   shell: openssl sha1 "{{ vyos_vmware_vmdk | basename }}" "{{ vyos_vmware_ovf | basename }}"
   args:
@@ -32,7 +39,8 @@
     content: "{{ result.stdout }}"
 - name: Converting the OVF to signed OVA
   become: false
-  command: "ovftool --compress=9 --privateKey={{ vyos_vmware_private_key_path }} {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
+  command: "ovftool --compress=9 --privateKey={{ vyos_vmware_private_key_path }}
+           {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
 - name: Delete temporary files for VMware
   file:
     path: "{{ item }}"

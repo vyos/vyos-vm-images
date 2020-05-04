@@ -22,10 +22,12 @@
 
 - name: Mount EFI
   mount:
-      src: "{{ vyos_target_drive }}p2"
-      path: "{{ vyos_install_root }}/boot/efi"
-      fstype: vfat
-      state: mounted
+    src: "{{ vyos_target_drive }}p2"
+    path: "{{ vyos_install_root }}/boot/efi"
+    fstype: vfat
+    state: mounted
+    fstab: /tmp/fstab
+  become: true
 
 - name: Install GRUB in the boot sector of {{ vyos_target_drive }}
   become: true
@@ -49,5 +51,5 @@
       src: "{{ vyos_target_drive }}p2"
       path: "{{ vyos_install_root }}/boot/efi"
       fstype: vfat
-      state: absent
-
+      state: unmounted
+  become: true

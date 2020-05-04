@@ -56,8 +56,7 @@
     src: "files/90_disable_config_stage.cfg"
     dest: "{{ vyos_install_root }}/etc/cloud/cloud.cfg.d/90_disable_config_stage.cfg"
   when:
-    - cloud_init_disable_config is defined
-    - cloud_init_disable_config == "true"
+    - cloud_init_disable_config
 - name: restore original resolv.conf
   become: true
   command: mv /tmp/resolv.conf {{ vyos_install_root }}/etc/resolv.conf

@@ -24,6 +24,7 @@
     target: install
   when: stat_result.stat.exists == False
 - name: Delete installation directory and archive
+  become: true
   file:
     path: "{{ item }}"
     state: absent

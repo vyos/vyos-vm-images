@@ -51,4 +51,5 @@
     name: "{{ vyos_write_root }}"
     src: "{{ vyos_target_drive }}p3"
     fstype: "{{ vyos_root_fstype }}"
+    fstab: /tmp/fstab
     state: mounted

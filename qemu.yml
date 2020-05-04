@@ -7,7 +7,7 @@
     vyos_format: qcow2
     vyos_qemu_img: "/tmp/vyos-{{ vyos_version }}{{ ci_tag  | default() }}-qemu.qcow2"
     vyos_output_img: "{{ vyos_qemu_img }}"
-    cloud_init: "false"
+    cloud_init: False
     cloud_init_ds_string: "{{ cloud_init_ds | default('NoCloud,ConfigDrive,None') }}"
     cloud_init_ds_list: "{{ cloud_init_ds_string.split(',') }}"
   roles:

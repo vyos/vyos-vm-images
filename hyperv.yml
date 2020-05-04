@@ -8,7 +8,7 @@
     vyos_format: vhdx
     vyos_hyperv_img: /tmp/vyos_hyperv_image.vhdx
     vyos_output_img: "{{ vyos_hyperv_img }}"
-    cloud_init: "false"
+    cloud_init: False
     cloud_init_ds_string: "{{ cloud_init_ds | default('NoCloud, ConfigDrive, None') }}"
     cloud_init_ds_list: "{{ cloud_init_ds_string.split(',') }}"
   roles:
