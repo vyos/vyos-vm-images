@@ -3,7 +3,7 @@ system {
     login {
         user vyos {
             authentication {
-{% if cloud_init and not ( keep_user is defined and keep_user == "true" ) %}
+{% if cloud_init|bool and not ( keep_user is defined and keep_user == "true" ) %}
                 encrypted-password "*"
 {% else %}
                 encrypted-password "$6$MjV2YvKQ56q$QbL562qhRoyUu8OaqrXagicvcsNpF1HssCY06ZxxghDJkBCfSfTE/4FlFB41xZcd/HqYyVBuRt8Zyq3ozJ0dc."
@@ -33,7 +33,7 @@ system {
     }
 }
 interfaces {
-{% if cloud_init and not ( empty_config is defined and empty_config == "true" ) %}
+{% if cloud_init|bool and not ( empty_config is defined and empty_config == "true" ) %}
     ethernet eth0 {
         address dhcp
     }
@@ -41,7 +41,7 @@ interfaces {
     loopback lo {
     }
 }
-{% if cloud_init and not ( empty_config is defined and empty_config == "true" ) %}
+{% if cloud_init|bool and not ( empty_config is defined and empty_config == "true" ) %}
 service {
     ssh {
         port 22

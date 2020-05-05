@@ -24,7 +24,7 @@
 - name: Generate OVF
   become: false
   template:
-    src: templates/vyos_vmware_image.ovf.j2
+    src: templates/vyos_vmware_simple.ovf.j2
     dest: "{{ vyos_vmware_ovf }}"
   when: simple_ova
 - name: Generate MF
@@ -39,7 +39,8 @@
     content: "{{ result.stdout }}"
 - name: Converting the OVF to signed OVA
   become: false
-  command: "ovftool --compress=9 --privateKey={{ vyos_vmware_private_key_path }}
+  command: "docker run -v {{ vyos_vmware_private_key_path }}:{{ vyos_vmware_private_key_path }}
+           -v /tmp:/tmp moander/ovftool ovftool --privateKey={{ vyos_vmware_private_key_path }}
            {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
 - name: Delete temporary files for VMware
   file:

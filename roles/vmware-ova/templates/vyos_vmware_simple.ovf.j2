@@ -25,7 +25,7 @@
       <Info>VyOS is a Linux-based network operating system that provides software-based network routing, firewall, and VPN functionality.</Info>
       <Product>VyOS</Product>
       <Vendor>Sentrium S.L.</Vendor>
-      <Version>{{version}}</Version>
+      <Version>{{ vyos_version }}</Version>
       <ProductUrl>https://www.vyos.io</ProductUrl>
       <VendorUrl>https://sentrium.io/</VendorUrl>
       <AppUrl/>
@@ -117,7 +117,6 @@
       </ovf:Item>
       <vmw:Config ovf:required="false" vmw:key="cpuHotAddEnabled" vmw:value="true"/>
       <vmw:Config ovf:required="false" vmw:key="memoryHotAddEnabled" vmw:value="true"/>
-      <vmw:ExtraConfig ovf:required="false" vmw:key="sched.mem.pin" vmw:value="TRUE"/>
     </VirtualHardwareSection>
   </VirtualSystem>
 </ovf:Envelope>

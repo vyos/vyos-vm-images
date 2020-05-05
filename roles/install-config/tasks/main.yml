@@ -10,3 +10,10 @@
     src: config.boot.j2
     dest: "{{ vyos_install_root }}/opt/vyatta/etc/config/config.boot"
     mode: 0755
+
+- name: Copy config to the installed image
+  become: true
+  template:
+    src: config.boot.j2
+    dest: "/tmp/config.boot"
+    mode: 0755
