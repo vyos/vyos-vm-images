@@ -3,9 +3,6 @@
 {% elif grub_console == "serial" %}
 {% set grub_default=1 %}
 {% endif %}
-{% if consistent_network_device_naming %}
-{% set grub_default = grub_default + 4 %}
-{% endif %}
 set default={{ grub_default }}
 set timeout=5
 serial --unit=0
