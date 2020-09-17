@@ -1,4 +1,3 @@
-
 - name: Create GRUB directory
   become: true
   file:
@@ -19,7 +18,6 @@
   args:
     warn: no
 
-
 - name: Mount EFI
   mount:
       src: "{{ vyos_target_drive }}p2"
@@ -29,7 +27,7 @@
 
 - name: Install GRUB in the boot sector of {{ vyos_target_drive }}
   become: true
-  command: "chroot {{ vyos_install_root }} grub-install --no-floppy --root-directory=/boot {{ vyos_grub_drive }} --force" 
+  command: "chroot {{ vyos_install_root }} grub-install --no-floppy --target=i386-pc --root-directory=/boot {{ loop_device.stdout }} --force"
   args:
       creates: "{{ vyos_install_root }}/boot/grub/grubenv"
 

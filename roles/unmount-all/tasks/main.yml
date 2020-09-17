@@ -36,13 +36,20 @@
   become: true
   mount:
     name: "{{ vyos_write_root }}"
-    src: "{{ vyos_target_drive }}"
-    fstype: "{{ vyos_root_fstype }}"
     state: absent
 
 - name: Remove image partitions
   become: true
   command: "kpartx -dv {{ vyos_raw_img }}"
+
+- name: Remove /dev/mapper entries
+  become: true
+  command: "dmsetup remove {{ item }}"
+  with_items: "{{ loop_partitions.stdout_lines }}"
+
+- name: Detach {{ loop_device.stdout }}
+  become: true
+  command: "losetup -d {{ loop_device.stdout }}"
 
 - name: Unmount {{ vyos_cd_squash_root }}
   become: true
