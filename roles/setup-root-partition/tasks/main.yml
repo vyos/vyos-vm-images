@@ -1,34 +1,21 @@
 - name: Partition disk
   become: true
   command:
-      cmd: "sgdisk -a1 -n1:34:2047   -t1:EF02 -n2:2048:+256M -t2:EF00 -n3:0:0:+100% -t3:8300 {{ vyos_raw_img }}"
-
-- name: Create hybrid MBR
-  become: true
-  command:
-      cmd: "sgdisk -h -t1:EF02 -t2:EF00 -t3:8300 {{ vyos_raw_img }}"
+      cmd: "sgdisk -a1 -n1:34:2047 -t1:EF02 -n2:2048:+256M -t2:EF00 -n3:0:0:+100% -t3:8300 {{ vyos_raw_img }}"
 
 - name: Reread partitions from image and mount to loopback
   become: true
-  command: "kpartx -av  {{ vyos_raw_img }}"
-
-- name: Find the loop device that was used, map to mapper
+  shell: "kpartx -av {{ vyos_raw_img }} | awk '{ print $3 }'"
+  register: loop_partitions
+  
+- name: Find loop device path
   become: true
-  shell: "losetup | grep {{ vyos_raw_img }} | head -n1 | awk '{print $1}' | sed 's/dev/dev\\/mapper/g'"
-  register: result
+  shell: "losetup -l -O NAME,BACK-FILE | awk '{ if (match($2, \"{{ vyos_raw_img }}\")) print $1}'"
+  register: loop_device
 
-- name: Set vyos_target_drive.
+- name: Set vyos_target_drive fact
   set_fact:
-    vyos_target_drive: "{{ result.stdout }}"
-
-- name: Pull grub drive
-  become: true
-  shell: "losetup | grep vyos_raw_image.img | head -n1 | awk '{print $1}'"
-  register: result
-
-- name: Set vyos_grub_drive.
-  set_fact:
-    vyos_grub_drive: "{{ result.stdout }}"
+    vyos_target_drive: "{{ loop_device.stdout | regex_replace('^/dev/(loop.*)$', '/dev/mapper/\\1') }}"
 
 - name: Create a fileystem on EFI partition
   become: true
@@ -37,7 +24,6 @@
     device: "{{ vyos_target_drive }}p2"
     opts: "-n EFI -F 32 -s 1"
  
-
 - name: Create a fileystem on root partition
   become: true
   filesystem:
