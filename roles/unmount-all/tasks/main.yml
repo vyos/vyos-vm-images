@@ -44,12 +44,14 @@
 
 - name: Remove /dev/mapper entries
   become: true
-  command: "dmsetup remove {{ item }}"
+  command: "dmsetup remove {{ item }} || true"
   with_items: "{{ loop_partitions.stdout_lines }}"
+  failed_when: false
 
 - name: Detach {{ loop_device.stdout }}
   become: true
   command: "losetup -d {{ loop_device.stdout }}"
+  failed_when: false
 
 - name: Unmount {{ vyos_cd_squash_root }}
   become: true
