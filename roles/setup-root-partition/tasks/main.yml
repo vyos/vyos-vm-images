@@ -14,7 +14,7 @@
 
 - name: Find the loop device that was used, map to mapper
   become: true
-  shell: "losetup | grep vyos_raw_image.img | head -n1 | awk '{print $1}' | sed 's/dev/dev\\/mapper/g'"
+  shell: "losetup | grep {{ vyos_raw_img }} | head -n1 | awk '{print $1}' | sed 's/dev/dev\\/mapper/g'"
   register: result
 
 - name: Set vyos_target_drive.

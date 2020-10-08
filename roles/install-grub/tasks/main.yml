@@ -19,8 +19,14 @@
   args:
     warn: no
 
+- name: Create efi directory
+  become: true
+  file:
+    path: "{{ vyos_install_root }}/boot/grub"
+    state: directory
 
 - name: Mount EFI
+  become: true
   mount:
       src: "{{ vyos_target_drive }}p2"
       path: "{{ vyos_install_root }}/boot/efi"
@@ -45,6 +51,7 @@
     mode: 0644
 
 - name: Unmount EFI
+  become: true
   mount:
       src: "{{ vyos_target_drive }}p2"
       path: "{{ vyos_install_root }}/boot/efi"

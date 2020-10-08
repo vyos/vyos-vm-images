@@ -1,0 +1,2 @@
+- name: set raw image to the correct name
+  command: mv "{{ vyos_raw_img }}" "{{ vyos_qemu_raw_img }}"
