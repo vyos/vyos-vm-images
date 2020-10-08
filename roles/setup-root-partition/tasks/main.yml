@@ -7,7 +7,7 @@
   become: true
   shell: "kpartx -av {{ vyos_raw_img }} | awk '{ print $3 }'"
   register: loop_partitions
-
+  
 - name: Find loop device path
   become: true
   shell: "losetup -l -O NAME,BACK-FILE | awk '{ if (match($2, \"{{ vyos_raw_img }}\")) print $1}'"
