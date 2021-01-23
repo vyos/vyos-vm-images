@@ -1,6 +1,6 @@
 ansible_host_key_checking: False
 
-vyos_iso_url: ""
+vyos_iso_url: https://downloads.vyos.io/rolling/current/amd64/vyos-rolling-latest.iso
 vyos_iso_local: "{{ iso_local | default('/tmp/vyos.iso') }}"
 vyos_key_url: https://downloads.vyos.io/vyos-release.gpg
 vyos_key_local: /tmp/vyos-release.gpg
