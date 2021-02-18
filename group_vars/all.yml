@@ -18,3 +18,4 @@ vyos_root_fstype: ext4
 vyos_target_drive: ""
 vyos_raw_img: /tmp/vyos_raw_image.img
 grub_console: "kvm"
+consistent_network_device_naming: false
