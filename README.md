@@ -126,3 +126,9 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     ```
     -e empty_config=true
     ```
+
+- Select a type of partition table for a disk image. Supported: `mbr`, `gpt`, `hybrid` (default: `hybrid`):
+
+    ```
+    -e parttable_type=hybrid
+    ```

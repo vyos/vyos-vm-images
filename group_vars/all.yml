@@ -13,6 +13,7 @@ vyos_read_root: /mnt/squashfs
 vyos_install_root: /mnt/inst_root
 
 vyos_disk_size: "{{ disk_size | default(10) }}"
+vyos_parttable_type: "{{ parttable_type | default('hybrid') }}"
 vyos_root_fstype: ext4
 
 vyos_target_drive: ""

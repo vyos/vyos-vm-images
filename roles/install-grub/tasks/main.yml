@@ -27,20 +27,24 @@
 - name: Mount EFI
   become: true
   mount:
-      src: "{{ vyos_target_drive }}p2"
+      src: "{{ vyos_target_drive }}p{{ partition_num_efi }}"
       path: "{{ vyos_install_root }}/boot/efi"
       fstype: vfat
       state: mounted
+  when: partition_num_efi is defined
 
 - name: Install GRUB in the boot sector of {{ vyos_target_drive }}
   become: true
   command: "chroot {{ vyos_install_root }} grub-install --no-floppy --target=i386-pc --root-directory=/boot {{ loop_device.stdout }} --force"
   args:
       creates: "{{ vyos_install_root }}/boot/grub/grubenv"
+  when: (vyos_parttable_type == "mbr") or
+        (vyos_parttable_type == "hybrid")
 
-- name: Install EFI GRUB to {{ vyos_target_drive }}p2
+- name: Install EFI GRUB to {{ vyos_target_drive }}p{{ partition_num_efi }}
   become: true
   command: "chroot {{ vyos_install_root }} grub-install --no-floppy --recheck --target=x86_64-efi --force-extra-removable --root-directory=/boot --efi-directory=/boot/efi --bootloader-id='VyOS' --no-uefi-secure-boot"
+  when: partition_num_efi is defined
 
 - name: Configure GRUB
   become: true
@@ -52,8 +56,8 @@
 - name: Unmount EFI
   become: true
   mount:
-      src: "{{ vyos_target_drive }}p2"
+      src: "{{ vyos_target_drive }}p{{ partition_num_efi }}"
       path: "{{ vyos_install_root }}/boot/efi"
       fstype: vfat
       state: absent
-
+  when: partition_num_efi is defined
