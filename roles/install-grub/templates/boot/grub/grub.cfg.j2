@@ -11,21 +11,21 @@ insmod efi_gop
 insmod efi_uga
 
 menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} (KVM console)" {
-  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=ttyS0 console=tty0
+  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=tty0
   initrd /boot/{{ vyos_version }}/initrd.img
 }
 
 menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} (Serial console)" {
-  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=tty0 console=ttyS0
+  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=ttyS0
   initrd /boot/{{ vyos_version }}/initrd.img
 }
 
 menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} - password reset (KVM console)" {
-  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=ttyS0 console=tty0 init=/opt/vyatta/sbin/standalone_root_pw_reset
+  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=tty0 init=/opt/vyatta/sbin/standalone_root_pw_reset
   initrd /boot/{{ vyos_version }}/initrd.img
 }
 
 menuentry "VyOS {{ vyos_version }} for {{ vyos_platform }} - password reset (Serial console)" {
-  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=tty0 console=ttyS0 init=/opt/vyatta/sbin/standalone_root_pw_reset
+  linux /boot/{{ vyos_version }}/vmlinuz boot=live rootdelay=5 noautologin net.ifnames=0 biosdevname=0 vyos-union=/boot/{{ vyos_version }} console=ttyS0 init=/opt/vyatta/sbin/standalone_root_pw_reset
   initrd /boot/{{ vyos_version }}/initrd.img
 }

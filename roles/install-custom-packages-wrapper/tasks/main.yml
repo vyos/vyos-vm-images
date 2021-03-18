@@ -1,0 +1,4 @@
+- name: Check if we need to install custom packages
+  include_role:
+    name: install-custom-packages
+  when: custom_packages is defined

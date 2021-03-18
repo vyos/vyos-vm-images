@@ -26,14 +26,24 @@
 - name: apt-get update
   become: true
   command: chroot {{ vyos_install_root }} apt-get update
-- name: Install qemu-guest-agent
+- name: Copy packages to a temporary directory
   become: true
-  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y qemu-guest-agent
-  when: guest_agent == "qemu"
-- name: Install open-vm-tools
-  become: true
-  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y open-vm-tools
-  when: guest_agent == "vmware"
+  copy:
+    src: "files/custom_debs/"
+    dest: "{{ vyos_install_root }}/tmp/custom_debs/"
+- name: Install custom packages from a list
+  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y --no-install-recommends {{ lookup('file', 'files/custom_packages_list.txt') }}
+- name: Check if custom debs directory exists
+  stat:
+    path: "{{ vyos_install_root }}/tmp/custom_debs/"
+  register: custom_debs_dir
+- name: Install custom packages from deb files
+  command: chroot {{ vyos_install_root }} dpkg -i --force-depends -R /tmp/custom_debs/
+  when: custom_debs_dir.stat.exists
+- name: Install missed dependencies
+  command: chroot {{ vyos_install_root }} apt-get -f -y install
+- name: Delete DEB packages
+  command: chroot {{ vyos_install_root }} rm -rf /tmp/custom_debs/
 - name: apt-get clean
   become: true
   command: chroot {{ vyos_install_root }} apt-get clean
