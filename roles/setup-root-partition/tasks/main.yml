@@ -70,3 +70,4 @@
     src: "{{ vyos_target_drive }}p{{ partition_num_root }}"
     fstype: "{{ vyos_root_fstype }}"
     state: mounted
+    opts: discard

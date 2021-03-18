@@ -25,6 +25,7 @@
     - install-persistence-conf
     - install-cloud-init-wrapper
     - install-guest-agent-wrapper
+    - install-custom-packages-wrapper
     - fstrim
     - unmount-pre
     - create-pxe-archive

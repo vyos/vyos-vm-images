@@ -121,14 +121,19 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     -e keep_user=true
     ```
 
-- Create an image with empty configuration, do not add any default settings like eth0 address, SSH service (default: false):
-
-    ```
-    -e empty_config=true
-    ```
-
 - Select a type of partition table for a disk image. Supported: `mbr`, `gpt`, `hybrid` (default: `hybrid`):
 
     ```
     -e parttable_type=hybrid
+    ```
+- Select default console for boot. Supported: `kvm`, `serial` (default: depending on platform):
+
+    ```
+    -e grub_console=serial
+    ```
+
+- Install custom packages. Can be a list in the `files/custom_packages_list.txt` file separated by spaces, or deb files inside the `files/custom_debs/` directory:
+
+    ```
+    -e custom_packages=true
     ```
