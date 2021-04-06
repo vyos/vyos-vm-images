@@ -1,7 +1,3 @@
-- name: Get Debian version
-  become: true
-  command: chroot {{ vyos_install_root }} awk 'match($0, /VERSION=.*\((\w+)\)/, version) { print version[1] }' /etc/os-release
-  register: debian_version
 - name: Set VyOS branch name crux
   set_fact:
     vyos_branch: "crux"
@@ -28,7 +24,7 @@
   command: chroot {{ vyos_install_root }} apt-get update
 - name: Install cloud-init
   become: true
-  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y cloud-init cloud-utils
+  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y cloud-init cloud-utils ifupdown
 - name: apt-get clean
   become: true
   command: chroot {{ vyos_install_root }} apt-get clean
@@ -62,6 +58,12 @@
   when:
     - cloud_init_disable_config is defined
     - cloud_init_disable_config == "true"
+- name: Add source-directory to the /etc/network/interfaces
+  become: true
+  lineinfile:
+    path: "{{ vyos_install_root }}/etc/network/interfaces"
+    line: "source-directory /etc/network/interfaces.d"
+    create: yes
 - name: restore original resolv.conf
   become: true
   command: mv /tmp/resolv.conf {{ vyos_install_root }}/etc/resolv.conf
