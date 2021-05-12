@@ -28,14 +28,18 @@
     src: "files/custom_debs/"
     dest: "{{ vyos_install_root }}/tmp/custom_debs/"
 - name: Install custom packages from a list
+  become: true
   command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y --no-install-recommends {{ lookup('file', 'files/custom_packages_list.txt') }}
 - name: Install custom packages from deb files
+  become: true
   command:
     cmd: "chroot {{ vyos_install_root }} dpkg -i --force-depends /tmp/custom_debs/{{ item | basename }}"
   with_fileglob: "{{ vyos_install_root }}/tmp/custom_debs/*.deb"
 - name: Install missed dependencies
+  become: true
   command: chroot {{ vyos_install_root }} apt-get -f -y install
 - name: Delete DEB packages
+  become: true
   command: chroot {{ vyos_install_root }} rm -rf /tmp/custom_debs/
 - name: apt-get clean
   become: true
