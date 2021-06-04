@@ -1,0 +1,53 @@
+- name: Convert raw to vmdk
+  command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O vmdk -o adapter_type=lsilogic "{{ vyos_vmware_tmp_vmdk }}"
+
+- name: Fix vmdk with open-vmdk
+  command: vmdk-convert "{{ vyos_vmware_tmp_vmdk }}" "{{ vyos_vmware_vmdk }}"
+
+- name: Delete temporary image
+  file:
+    path: "{{ vyos_vmware_tmp_vmdk }}"
+    state: absent
+
+- name: Get vmdk_file_size
+  shell: du --bytes "{{ vyos_vmware_vmdk }}" | cut -f1
+  register: vmdk_file_size
+
+- name: Get vmdk_populated_size
+  shell: vmdk-convert -i "{{ vyos_vmware_vmdk }}"
+  register: result
+
+- name: Set vmdk_populated_size
+  set_fact:
+    vmdk_populated_size: "{{ (result.stdout | from_json).used }}"
+
+- name: Generate OVF
+  become: false
+  template:
+    src: templates/vyos_vmware_image.ovf.j2
+    dest: "{{ vyos_vmware_ovf }}"
+
+- name: Generate MF
+  shell: openssl sha1 "{{ vyos_vmware_vmdk | basename }}" "{{ vyos_vmware_ovf | basename }}"
+  args:
+    chdir: /tmp
+  register: result
+
+- name: Create MF
+  become: false
+  copy:
+    dest: "{{ vyos_vmware_mf }}"
+    content: "{{ result.stdout }}"
+
+- name: Converting the OVF to signed OVA
+  become: false
+  command: "ovftool --privateKey={{ vyos_vmware_private_key_path }} {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
+
+- name: Delete temporary files for VMware
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ vyos_vmware_ovf }}"
+    - "{{ vyos_vmware_mf }}"
+    - "{{ vyos_vmware_vmdk }}"

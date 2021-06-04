@@ -1,0 +1,50 @@
+---
+- hosts: vmware
+  gather_facts: false
+  connection: local
+  vars:
+    vyos_platform: VMware
+    vyos_format: ova
+    vyos_vmdk_size: 10
+    vyos_vmware_ova: "/tmp/vyos-{{ vyos_version }}{{ ci_tag | default() }}-vmware.ova"
+    vyos_output_img: "{{ vyos_vmware_ova }}"
+    cloud_init: "true"
+    cloud_init_ds_string: "{{ cloud_init_ds | default('OVF,None') }}"
+    cloud_init_ds_list: "{{ cloud_init_ds_string.split(',') }}"
+    vmware_guest: debian10_64Guest
+    debian_release: 10
+  tasks:
+    - block:
+        - include_role:
+            name: '{{ roleinputvar }}'
+          loop:
+            - install-packages
+            - load-modules
+            - download-iso
+            - mount-iso
+            - get-version
+            - create-disk
+            - setup-root-partition
+            - install-image
+            - mount-root-fs
+            - install-config
+            - install-grub
+            - install-persistence-conf
+            - install-cloud-init-wrapper
+            - fstrim
+            - unmount-pre
+            - unmount-all
+            - install-open-vmdk
+            - vmware-ci
+            - cleanup-ending
+            - release
+          loop_control:
+            loop_var: roleinputvar
+      rescue:
+        - include_role:
+            name: '{{ roleinputvar }}'
+          loop:
+            - unmount-pre
+            - unmount-all
+          loop_control:
+            loop_var: roleinputvar
