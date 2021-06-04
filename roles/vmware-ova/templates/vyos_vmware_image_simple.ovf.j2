@@ -39,9 +39,9 @@
       <Info/>
       <Annotation>VyOS</Annotation>
     </AnnotationSection>
-    <OperatingSystemSection ovf:id="96" ovf:version="6" vmw:osType="debian8_64Guest">
+    <OperatingSystemSection ovf:id="96" ovf:version="6" vmw:osType="{{ vmware_guest }}">
       <Info>The operating system installed</Info>
-      <Description>Debian GNU/Linux 8 (64-bit)</Description>
+      <Description>Debian GNU/Linux {{ debian_release }} (64-bit)</Description>
     </OperatingSystemSection>
     <VirtualHardwareSection ovf:required="false" ovf:transport="com.vmware.guestInfo">
       <Info>Virtual Hardware Requirements</Info>

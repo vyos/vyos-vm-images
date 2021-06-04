@@ -41,7 +41,7 @@
 
 - name: Converting the OVF to signed OVA
   become: false
-  command: "ovftool --compress=9 --privateKey={{ vyos_vmware_private_key_path }} {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
+  command: "ovftool --privateKey={{ vyos_vmware_private_key_path }} {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
 
 - name: Delete temporary files for VMware
   file:
@@ -72,7 +72,7 @@
 
     - name: Converting the OVF to signed OVA
       become: false
-      command: "ovftool --compress=9 --privateKey={{ vyos_vmware_private_key_path }} {{ vyos_vmware_simple_mf }} {{ vyos_vmware_simple_ovf }}"
+      command: "ovftool --privateKey={{ vyos_vmware_private_key_path }} {{ vyos_vmware_simple_mf }} {{ vyos_vmware_simple_ovf }}"
 
     - name: Delete temporary files for VMware
       file:

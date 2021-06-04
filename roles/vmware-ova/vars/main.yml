@@ -5,3 +5,5 @@ vyos_vmware_mf: /tmp/vyos_vmware_image.mf
 vyos_vmware_simple_mf: /tmp/vyos_vmware_simple_image.mf
 vyos_vmware_vmdk: /tmp/vyos_vmware_image.vmdk
 vyos_vmware_cert: /tmp/vyos_vmware_image.cert
+vmware_guest: debian10_64Guest
+debian_release: 10
