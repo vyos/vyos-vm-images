@@ -48,7 +48,7 @@
       <System>
         <vssd:ElementName>Virtual Hardware Family</vssd:ElementName>
         <vssd:InstanceID>0</vssd:InstanceID>
-        <vssd:VirtualSystemType>vmx-11</vssd:VirtualSystemType>
+        <vssd:VirtualSystemType>vmx-{{ 11 if debian_release == 8 else 13 }}</vssd:VirtualSystemType>
       </System>
       <Item>
         <rasd:AllocationUnits>hertz * 10^6</rasd:AllocationUnits>
@@ -102,7 +102,7 @@
         <rasd:Description>NIC representing LAN</rasd:Description>
         <rasd:ElementName>WAN</rasd:ElementName>
         <rasd:InstanceID>7</rasd:InstanceID>
-        <rasd:ResourceSubType>virtio</rasd:ResourceSubType>
+        <rasd:ResourceSubType>VmxNet3</rasd:ResourceSubType>
         <rasd:ResourceType>10</rasd:ResourceType>
       </ovf:Item>
       <ovf:Item>
@@ -112,7 +112,7 @@
         <rasd:Description>NIC representing WAN</rasd:Description>
         <rasd:ElementName>LAN</rasd:ElementName>
         <rasd:InstanceID>8</rasd:InstanceID>
-        <rasd:ResourceSubType>virtio</rasd:ResourceSubType>
+        <rasd:ResourceSubType>VmxNet3</rasd:ResourceSubType>
         <rasd:ResourceType>10</rasd:ResourceType>
       </ovf:Item>
       <vmw:Config ovf:required="false" vmw:key="cpuHotAddEnabled" vmw:value="true"/>

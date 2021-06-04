@@ -113,7 +113,7 @@
       <System>
         <vssd:ElementName>Virtual Hardware Family</vssd:ElementName>
         <vssd:InstanceID>0</vssd:InstanceID>
-        <vssd:VirtualSystemType>vmx-11</vssd:VirtualSystemType>
+        <vssd:VirtualSystemType>vmx-{{ 11 if debian_release == 8 else 13 }}</vssd:VirtualSystemType>
       </System>
       <Item configuration="1CPU-512MB">
         <rasd:AllocationUnits>hertz * 10^6</rasd:AllocationUnits>
