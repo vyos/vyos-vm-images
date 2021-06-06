@@ -1,5 +1,0 @@
-vyos_vmware_ovf: /tmp/vyos_vmware_image.ovf
-vyos_vmware_tmp_vmdk: /tmp/vyos_vmware_image_tmp.vmdk
-vyos_vmware_mf: /tmp/vyos_vmware_image.mf
-vyos_vmware_vmdk: /tmp/vyos_vmware_image.vmdk
-vyos_vmware_cert: /tmp/vyos_vmware_image.cert

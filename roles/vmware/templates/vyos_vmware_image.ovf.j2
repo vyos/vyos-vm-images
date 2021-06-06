@@ -12,6 +12,7 @@
       <ovf:Description>LAN network</ovf:Description>
     </ovf:Network>
   </ovf:NetworkSection>
+  {%- if ovf_template|default('ci') != 'simple' -%}
   <DeploymentOptionSection>
     <Info>List of profiles</Info>
     <Configuration ovf:default="true" ovf:id="1CPU-512MB">
@@ -27,6 +28,7 @@
       <Description ovf:msgid="Large.description">Large hardware profile - 8 vCPUs, 32 GB RAM</Description>
     </Configuration>
   </DeploymentOptionSection>
+  {%- endif -%}
   <vmw:IpAssignmentSection ovf:required="false" vmw:protocols="IPv4 IPv6" vmw:schemes="ovfenv dhcp">
     <Info>Supported IP assignment schemes</Info>
   </vmw:IpAssignmentSection>
@@ -45,6 +47,7 @@
       <VendorUrl>https://sentrium.io/</VendorUrl>
       <AppUrl/>
       <Category>Appliance user Settings</Category>
+      {%- if ovf_template|default('ci') != 'simple' -%}
       <Property ovf:key="password" ovf:password="true" ovf:qualifiers="MinLen(8)" ovf:type="string" ovf:userConfigurable="true" ovf:value="">
         <Label ovf:msgid="Password.label">Password</Label>
         <Description ovf:msgid="Password.description">The password for the appliance &apos;vyos&apos; account. Passwords must be at least 8 characters in length.</Description>
@@ -95,6 +98,7 @@
         <Label>Cloud-init User-Data</Label>
         <Description>User-Data, encoded with base64.</Description>
       </Property>
+    {%- endif -%}
     </ProductSection>
     <ProductSection ovf:class="vm" ovf:required="false">
       <Info>VM specific properties</Info>
@@ -115,6 +119,7 @@
         <vssd:InstanceID>0</vssd:InstanceID>
         <vssd:VirtualSystemType>vmx-{{ 11 if debian_release == 8 else 13 }}</vssd:VirtualSystemType>
       </System>
+      {%- if ovf_template|default('ci') != 'simple' -%}
       <Item configuration="1CPU-512MB">
         <rasd:AllocationUnits>hertz * 10^6</rasd:AllocationUnits>
         <rasd:Description>Number of virtual CPUs</rasd:Description>
@@ -166,6 +171,24 @@
         <rasd:VirtualQuantity>32768</rasd:VirtualQuantity>
         <rasd:Reservation>32768</rasd:Reservation>
       </Item>
+      {%- else -%}
+      <Item>
+        <rasd:AllocationUnits>hertz * 10^6</rasd:AllocationUnits>
+        <rasd:Description>Number of virtual CPUs</rasd:Description>
+        <rasd:ElementName xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData">1 virtual CPU</rasd:ElementName>
+        <rasd:InstanceID xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData">1</rasd:InstanceID>
+        <rasd:ResourceType>3</rasd:ResourceType>
+        <rasd:VirtualQuantity>1</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:AllocationUnits>byte * 2^20</rasd:AllocationUnits>
+        <rasd:Description>Memory Size</rasd:Description>
+        <rasd:ElementName xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData">4 GB of memory</rasd:ElementName>
+        <rasd:InstanceID xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData">2</rasd:InstanceID>
+        <rasd:ResourceType>4</rasd:ResourceType>
+        <rasd:VirtualQuantity>4096</rasd:VirtualQuantity>
+      </Item>
+      {%- endif -%}
       <Item>
         <rasd:Address xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData">0</rasd:Address>
         <rasd:ElementName xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData">SCSI Controller 0 - VMware Paravirtual SCSI</rasd:ElementName>
@@ -217,7 +240,6 @@
       </ovf:Item>
       <vmw:Config ovf:required="false" vmw:key="cpuHotAddEnabled" vmw:value="true"/>
       <vmw:Config ovf:required="false" vmw:key="memoryHotAddEnabled" vmw:value="true"/>
-      <vmw:ExtraConfig ovf:required="false" vmw:key="sched.mem.pin" vmw:value="TRUE"/>
     </VirtualHardwareSection>
   </VirtualSystem>
 </ovf:Envelope>
