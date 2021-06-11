@@ -32,10 +32,16 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     ansible-playbook qemu.yml
     ```
 
-- VMware
+- VMware Cloud-init
 
     ```
     ansible-playbook vmware.yml -e vyos_vmware_private_key_path=path_to_private_key
+    ```
+
+- VMware simple ova
+
+    ```
+    ansible-playbook vmware.yml -e vyos_vmware_private_key_path=path_to_private_key -e cloud_init=false -e ovf_template=simple
     ```
 
 - Microsoft Hyper-V
