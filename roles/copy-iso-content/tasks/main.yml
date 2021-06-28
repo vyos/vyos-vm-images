@@ -1,0 +1,5 @@
+- name: copy iso files
+  become: true
+  synchronize:
+    src: "/mnt/cdrom/"
+    dest: "/tmp/live-{{ vyos_version }}"

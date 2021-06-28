@@ -38,19 +38,27 @@
     name: "{{ vyos_write_root }}"
     state: absent
 
+- name: Check if the raw image file exists
+  stat:
+    path: "{{ vyos_raw_img }}"
+  register: st
+
 - name: Remove image partitions
   become: true
   command: "kpartx -dv {{ vyos_raw_img }}"
+  when: st.stat.exists
 
 - name: Remove /dev/mapper entries
   become: true
   command: "dmsetup remove {{ item }} || true"
   with_items: "{{ loop_partitions.stdout_lines }}"
+  when: loop_partitions.stdout_lines is defined
   failed_when: false
 
 - name: Detach {{ loop_device.stdout }}
   become: true
   command: "losetup -d {{ loop_device.stdout }}"
+  when: loop_device.stdout is defined
   failed_when: false
 
 - name: Unmount {{ vyos_cd_squash_root }}

@@ -1,0 +1,6 @@
+---
+- name: Extract squashfs image from ISO to root partition
+  become: true
+  command: unsquashfs -d {{ vyos_install_root }} {{ vyos_squashfs_image }}
+  args:
+   creates: "{{ vyos_install_root }}"

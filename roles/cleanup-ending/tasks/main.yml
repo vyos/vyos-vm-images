@@ -15,3 +15,15 @@
   file:
     path: "{{ vyos_key_local }}"
     state: absent
+
+- name: Delete extracted squashfs path
+  become: true
+  file:
+    path: "{{ vyos_install_root }}"
+    state: absent
+
+- name: Delete temp iso creation path
+  become: true
+  file:
+    path: "/tmp/live-{{ vyos_version }}"
+    state: absent
