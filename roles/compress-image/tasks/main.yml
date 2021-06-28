@@ -1,0 +1,10 @@
+---
+- name: Delete filesystem.squashfs
+  become: true
+  file:
+    path: "/tmp/live-{{ vyos_version }}/live/filesystem.squashfs"
+    state: absent
+
+- name: compress path to squashfs image
+  become: true
+  command: mksquashfs {{ vyos_install_root }} /tmp/live-{{ vyos_version }}/live/filesystem.squashfs -comp xz
