@@ -2,19 +2,19 @@
   become: true
   command:
       cmd: "sfdisk -q -X dos {{ vyos_raw_img }}"
-      stdin: "3,+,L,*"
+      stdin: "2048,+,L,*"
   when: vyos_parttable_type == "mbr"
 
 - name: Partition disk (GPT)
   become: true
   command:
-      cmd: "sgdisk -a1 -n1:34:+256M -t1:EF00 -n2:0:0:+100% -t2:8300 {{ vyos_raw_img }}"
+      cmd: "sgdisk -a1 -n1:2048:+256M -t1:EF00 -n2:0:0:+100% -t2:8300 {{ vyos_raw_img }}"
   when: vyos_parttable_type == "gpt"
 
 - name: Partition disk (hybrid)
   become: true
   command:
-      cmd: "sgdisk -a1 -n1:34:2047 -t1:EF02 -n2:2048:+256M -t2:EF00 -n3:0:0:+100% -t3:8300 {{ vyos_raw_img }}"
+      cmd: "sgdisk -a1 -n1:2048:4095 -t1:EF02 -n2:4096:+256M -t2:EF00 -n3:0:0:+100% -t3:8300 {{ vyos_raw_img }}"
   when: vyos_parttable_type == "hybrid"
 
 - name: Set partition numbers for next actions (MBR)
