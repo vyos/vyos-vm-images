@@ -1,0 +1,30 @@
+---
+- hosts: vagrant-virtualbox
+  become: True
+  gather_facts: False
+  connection: local
+  vars:
+    vyos_platform: vagrant-virtualbox
+    vyos_format: box
+    vyos_vagrant_virtualbox_box: "{{ build_dir }}/vyos_vagrant_virtualbox_image.box"
+    vyos_output_img: "{{ vyos_vagrant_virtualbox_box }}"
+    cloud_init: False
+    enable_dhcp: True
+    enable_ssh: True
+    vagrant_provider: virtualbox
+  roles:
+    - install-packages
+    - download-iso
+    - mount-iso
+    - get-version
+    - create-disk
+    - setup-root-partition
+    - install-image
+    - mount-root-fs
+    - install-config
+    - install-grub
+    - install-persistence-conf
+    - unmount-pre
+    - unmount-all
+    - vagrant-virtualbox-box
+    - release-vagrant-box

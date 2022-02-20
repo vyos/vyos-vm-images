@@ -1,0 +1,42 @@
+- name: Create output directory if it does not exist
+  become: no
+  file:
+    path: "{{ vyos_vagrant_virtualbox_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Convert raw to vmdk
+  command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O vmdk -o adapter_type=lsilogic "{{ vyos_vagrant_virtualbox_vmdk }}"
+
+- name: Get vmdk_file_size
+  shell: du --bytes "{{ vyos_vagrant_virtualbox_vmdk }}" | cut -f1
+  register: vmdk_file_size
+
+- name: Generate OVF
+  become: false
+  template:
+    src: templates/box.ovf.j2
+    dest: "{{ vyos_vagrant_virtualbox_ovf }}"
+
+- name: Copy metadata.json
+  become: false
+  copy:
+    src: "{{ vyos_vagrant_virtualbox_metadata }}"
+    dest: "{{ vyos_vagrant_virtualbox_tmp_metadata }}"
+
+- name: Copy Vagrantfile
+  become: false
+  copy:
+    src: "{{ vyos_vagrant_virtualbox_vagrantfile }}"
+    dest: "{{ vyos_vagrant_virtualbox_tmp_vagrantfile }}"
+
+- name: Create Vagrant box
+  become: false
+  archive:
+    path:
+      - "{{ vyos_vagrant_virtualbox_ovf }}"
+      - "{{ vyos_vagrant_virtualbox_vmdk }}"
+      - "{{ vyos_vagrant_virtualbox_tmp_metadata }}"
+      - "{{ vyos_vagrant_virtualbox_tmp_vagrantfile }}"
+    dest: "{{ vyos_vagrant_virtualbox_box }}"
+    format: tar

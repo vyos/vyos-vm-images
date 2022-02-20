@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Imported by import2vbox.pl -->
+
+<ovf:Envelope ovf:version="1.0" xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1" xmlns:vbox="http://www.virtualbox.org/ovf/machine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData" xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData">
+    <References>
+        <File ovf:href="box.vmdk" ovf:id="box0" ovf:size="{{ vmdk_file_size.stdout }}"></File>
+    </References>
+    <NetworkSection>
+        <Info>List of networks</Info>
+        <Network ovf:name="NAT">
+            <Description>NAT network used by this VM</Description>
+        </Network>
+    </NetworkSection>
+    <DiskSection>
+        <Info>List of Virtual Disks</Info>
+        <Disk ovf:diskId="vmdisk0" ovf:capacity="21474836480" ovf:fileRef="box0" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" ovf:disk-type="System" ovf:boot="True" vbox:uuid="c60aa175-9311-4bdd-b618-af1f6bd07b5e"></Disk>
+    </DiskSection>
+    <VirtualSystem ovf:id="box">
+        <Info>VyOS "{{ vyos_version }}"</Info>
+        <Name>bullseye</Name>
+        <OperatingSystemSection ovf:id="96" ovf:required="false">
+            <Info>The kind of operating system contained in this VM</Info>
+            <Description>debian</Description>
+        </OperatingSystemSection>
+        <VirtualHardwareSection>
+            <Info>2 CPU, 512 Memory</Info>
+            <Item>
+                <rasd:Caption>2 virtual cpu</rasd:Caption>
+                <rasd:Description>Number of virtual CPU</rasd:Description>
+                <rasd:InstanceID>1</rasd:InstanceID>
+                <rasd:ResourceType>3</rasd:ResourceType>
+                <rasd:VirtualQuantity>2</rasd:VirtualQuantity>
+            </Item>
+            <Item>
+                <rasd:AllocationUnits>byte * 2^20</rasd:AllocationUnits>
+                <rasd:Caption>512 MB of memory</rasd:Caption>
+                <rasd:Description>Memory Size</rasd:Description>
+                <rasd:InstanceID>2</rasd:InstanceID>
+                <rasd:ResourceType>4</rasd:ResourceType>
+                <rasd:VirtualQuantity>512</rasd:VirtualQuantity>
+            </Item>
+            <Item>
+                <rasd:Address>0</rasd:Address>
+                <rasd:Caption>sataController0</rasd:Caption>
+                <rasd:Description>SATA Controller</rasd:Description>
+                <rasd:ElementName>sataController0</rasd:ElementName>
+                <rasd:InstanceID>3</rasd:InstanceID>
+                <rasd:ResourceSubType>AHCI</rasd:ResourceSubType>
+                <rasd:ResourceType>20</rasd:ResourceType>
+            </Item>
+            <Item>
+                <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
+                <rasd:Caption>Ethernet adapter on 'NAT'</rasd:Caption>
+                <rasd:Connection>NAT</rasd:Connection>
+                <rasd:ElementName>Ethernet Adapter on 'NAT'</rasd:ElementName>
+                <rasd:InstanceID>4</rasd:InstanceID>
+                <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
+                <rasd:ResourceType>10</rasd:ResourceType>
+            </Item>
+            <Item>
+                <rasd:AddressOnParent>0</rasd:AddressOnParent>
+                <rasd:ElementName>Drive 0</rasd:ElementName>
+                <rasd:HostResource>ovf:/disk/vmdisk0</rasd:HostResource>
+                <rasd:InstanceID>5</rasd:InstanceID>
+                <rasd:Parent>3</rasd:Parent>
+                <rasd:ResourceType>17</rasd:ResourceType>
+            </Item>
+        </VirtualHardwareSection>
+        <vbox:Machine ovf:required="false" version="1.16-linux" uuid="{7ec3b584-e298-44ad-b669-9278e082ff5a}" name="box">
+            <ovf:Info>Extra Virtual Machine Configuration in VirtualBoxFormat</ovf:Info>
+            <Hardware>
+                <CPU count="2"></CPU>
+                <BIOS></BIOS>
+                <Memory RAMSize="512" />
+                <Display controller="VMSVGA" />
+                <Network>
+                    <Adapter slot="0" enabled="true" type="82540EM">
+                        <NAT />
+                    </Adapter>
+                    <Adapter slot="1" type="82540EM" />
+                    <Adapter slot="2" type="82540EM" />
+                    <Adapter slot="3" type="82540EM" />
+                    <Adapter slot="4" type="82540EM" />
+                    <Adapter slot="5" type="82540EM" />
+                    <Adapter slot="6" type="82540EM" />
+                    <Adapter slot="7" type="82540EM" />
+                </Network>
+            </Hardware>
+            <StorageControllers>
+                <StorageController name="SATA Controller" type="AHCI" PortCount="1">
+                    <AttachedDevice type="HardDisk" hotpluggable="false" port="0" device="0">
+                        <Image uuid="{c60aa175-9311-4bdd-b618-af1f6bd07b5e}" />
+                    </AttachedDevice>
+                </StorageController>
+                <StorageController name="Floppy Controller Controller" type="I82078" PortCount="1" />
+            </StorageControllers>
+        </vbox:Machine>
+    </VirtualSystem>
+</ovf:Envelope>

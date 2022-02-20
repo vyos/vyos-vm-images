@@ -1,0 +1,11 @@
+Vagrant.configure("2") do |config|
+  config.vm.base_mac = "0800278dc04d"
+  config.vm.post_up_message = "VyOS box. See https://app.vagrantup.com/vyos for help and bug reports"
+  config.vm.synced_folder './', '/vagrant',
+                          type: "rsync",
+                          owner: 'vyos',
+                          group: 'users',
+                          mount_options: ['dmode=775,fmode=775']
+  config.ssh.username = "vyos"
+  config.ssh.password = "vyos"
+end

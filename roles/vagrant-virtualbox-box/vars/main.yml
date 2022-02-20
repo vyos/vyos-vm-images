@@ -1,0 +1,8 @@
+vyos_vagrant_virtualbox_dir: "{{ build_dir }}/vyos_vagrant_virtualbox"
+vyos_vagrant_virtualbox_ovf: "{{ vyos_vagrant_virtualbox_dir }}/box.ovf"
+vyos_vagrant_virtualbox_vmdk: "{{ vyos_vagrant_virtualbox_dir }}/box.vmdk"
+vyos_vagrant_virtualbox_metadata: files/metadata.json
+vyos_vagrant_virtualbox_vagrantfile: files/Vagrantfile
+vyos_vagrant_virtualbox_tmp_metadata: "{{ vyos_vagrant_virtualbox_dir }}/metadata.json"
+vyos_vagrant_virtualbox_tmp_vagrantfile: "{{ vyos_vagrant_virtualbox_dir }}/Vagrantfile"
+vyos_vagrant_box_name: vyos/current

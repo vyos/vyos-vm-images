@@ -12,3 +12,6 @@ localhost
 
 [vagrant-libvirt]
 localhost
+
+[vagrant-virtualbox]
+localhost
