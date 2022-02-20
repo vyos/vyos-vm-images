@@ -35,6 +35,17 @@ system {
     }
 }
 interfaces {
+{% if enable_dhcp %}
+    ethernet eth0 {
+        address dhcp
+    }
+{% endif %}
     loopback lo {
     }
 }
+{% if enable_ssh %}
+service {
+    ssh {
+    }
+}
+{% endif %}

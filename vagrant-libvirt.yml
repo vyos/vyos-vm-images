@@ -6,11 +6,14 @@
   vars:
     vyos_platform: vagrant-libvirt
     vyos_format: box
-    vyos_vagrant_libvirt_box: /tmp/vyos_vagrant_libvirt_image.box
+    vyos_vagrant_libvirt_box: "{{ build_dir }}/vyos_vagrant_libvirt_image.box"
     vyos_output_img: "{{ vyos_vagrant_libvirt_box }}"
+    cloud_init: False
+    enable_dhcp: True
+    enable_ssh: True
+    vagrant_provider: libvirt
   roles:
     - install-packages
-    - load-modules
     - download-iso
     - mount-iso
     - get-version
@@ -24,5 +27,4 @@
     - unmount-pre
     - unmount-all
     - vagrant-libvirt-box
-    - release
-    - release-vagrant-libvirt-box
+    - release-vagrant-box

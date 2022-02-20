@@ -1,35 +1,11 @@
+- name: Create build directory if it does not exist
+  file:
+    path: "{{ build_dir }}"
+    state: directory
+    mode: '0777'
+
 - name: Download VyOS ISO release
   get_url:
     url: "{{ vyos_iso_url }}"
     dest: "{{ vyos_iso_local }}"
     force: no
-
-- name: Fetch VyOS ISO GPG signature
-  uri:
-    url: "{{ vyos_iso_url }}.asc"
-    dest: "{{ vyos_iso_local }}.asc"
-    status_code: 200,404,403
-  tags: verify
-  register: gpg_uri_iso
-
-- name: Fetch the VyOS release GPG key
-  uri:
-    url: "{{ vyos_key_url}}"
-    dest: "{{ vyos_key_local }}"
-    status_code: 200,404,403
-  tags: verify
-  register: gpg_uri_release_key
-
-- name: Install the VyOS release GPG key
-  command: gpg --import {{ vyos_key_local }}
-  when:
-    - gpg_uri_iso.status == 200
-    - gpg_uri_release_key.status == 200
-  tags: verify
-
-- name: Validate ISO GPG signature
-  command: gpg --verify {{ vyos_iso_local }}.asc {{ vyos_iso_local }}
-  when:
-    - gpg_uri_iso.status == 200
-    - gpg_uri_release_key.status == 200
-  tags: verify
