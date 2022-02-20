@@ -8,7 +8,10 @@ You need a machine with at least 20 GB free space with Debian 10 (bare-metal, vi
 
 ```
 sudo apt update
-sudo apt install -y ansible python
+sudo apt install -y python3 python3-pip
+pip3 install poetry
+poetry install
+poetry shell
 ```
 
 If you want to build an OVA image, you also need `ovftool` from VMware. It should be downloaded from the [VMware site](https://code.vmware.com/tool/ovf). Also, you need a private key to sign an OVA file. It can be generated with the next command:
