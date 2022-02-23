@@ -3,4 +3,6 @@
   copy:
     src: "{{ vyos_output_img }}"
     dest: "{{ vyos_images_dir }}/vyos-{{ vyos_version }}-{{ vyos_platform | lower }}.{{ vyos_format }}"
-  when: vyos_images_dir is defined
+  when:
+    - release
+    - vyos_images_dir is defined

@@ -38,13 +38,13 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
 - VMware Cloud-init
 
     ```
-    ansible-playbook vmware.yml -e vyos_vmware_private_key_path=path_to_private_key
+    ansible-playbook vmware.yml -e vyos_vmware_sign=true -e vyos_vmware_private_key_path=path_to_private_key
     ```
 
 - VMware simple ova
 
     ```
-    ansible-playbook vmware.yml -e vyos_vmware_private_key_path=path_to_private_key -e cloud_init=false -e ovf_template=simple
+    ansible-playbook vmware.yml -e cloud_init=false -e ovf_template=simple
     ```
 
 - Microsoft Hyper-V
@@ -57,6 +57,12 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
 
     ```
     ansible-playbook vagrant-libvirt.yml
+    ```
+
+- Vagrant virtualbox
+
+    ```
+    ansible-playbook vagrant-virtualbox.yml
     ```
 
 ## Additional (optional) parameters
@@ -145,4 +151,10 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
 
     ```
     -e custom_packages=true
+    ```
+
+- Release (default: false):
+
+    ```
+    -e release=true
     ```

@@ -27,4 +27,5 @@
     - unmount-pre
     - unmount-all
     - vagrant-libvirt-box
+    - cleanup-ending
     - release-vagrant-box

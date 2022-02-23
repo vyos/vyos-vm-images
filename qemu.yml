@@ -5,7 +5,7 @@
   vars:
     vyos_platform: QEMU
     vyos_format: qcow2
-    vyos_qemu_img: "/tmp/vyos-{{ vyos_version }}{{ ci_tag  | default() }}-{{vyos_disk_size}}G-qemu.qcow2"
+    vyos_qemu_img: "{{ build_dir }}/vyos-{{ vyos_version }}{{ ci_tag  | default() }}-{{vyos_disk_size}}G-qemu.qcow2"
     vyos_output_img: "{{ vyos_qemu_img }}"
     cloud_init: "false"
     cloud_init_ds_string: "{{ cloud_init_ds | default('NoCloud,ConfigDrive,None') }}"
@@ -16,7 +16,6 @@
             name: '{{ roleinputvar }}'
           loop:
             - install-packages
-            - load-modules
             - download-iso
             - mount-iso
             - get-version

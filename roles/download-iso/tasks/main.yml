@@ -1,8 +1,9 @@
 - name: Create build directory if it does not exist
+  become: no
   file:
     path: "{{ build_dir }}"
     state: directory
-    mode: '0777'
+    mode: '0755'
 
 - name: Download VyOS ISO release
   get_url:

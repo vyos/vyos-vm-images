@@ -6,14 +6,13 @@
   vars:
     vyos_platform: Hyper-V
     vyos_format: vhdx
-    vyos_hyperv_img: /tmp/vyos_hyperv_image.vhdx
+    vyos_hyperv_img: "{{ build_dir }}/vyos_hyperv_image.vhdx"
     vyos_output_img: "{{ vyos_hyperv_img }}"
     cloud_init: "false"
     cloud_init_ds_string: "{{ cloud_init_ds | default('NoCloud, ConfigDrive, None') }}"
     cloud_init_ds_list: "{{ cloud_init_ds_string.split(',') }}"
   roles:
     - install-packages
-    - load-modules
     - download-iso
     - mount-iso
     - get-version
@@ -28,4 +27,5 @@
     - unmount-pre
     - unmount-all
     - hyperv-vhd
+    - cleanup-ending
     - release

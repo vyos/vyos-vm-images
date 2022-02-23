@@ -1,5 +1,7 @@
-vyos_vmware_ovf: /tmp/vyos_vmware_image.ovf
-vyos_vmware_tmp_vmdk: /tmp/vyos_vmware_image_tmp.vmdk
-vyos_vmware_mf: /tmp/vyos_vmware_image.mf
-vyos_vmware_vmdk: /tmp/vyos_vmware_image.vmdk
-vyos_vmware_cert: /tmp/vyos_vmware_image.cert
+vyos_vmware_dir: "{{ build_dir }}/vyos_vmware"
+vyos_vmware_ovf: "{{ vyos_vmware_dir }}/vyos_vmware_image.ovf"
+vyos_vmware_tmp_vmdk: "{{ vyos_vmware_dir }}/vyos_vmware_image_tmp.vmdk"
+vyos_vmware_mf: "{{ vyos_vmware_dir }}/vyos_vmware_image.mf"
+vyos_vmware_vmdk: "{{ vyos_vmware_dir }}/vyos_vmware_image.vmdk"
+vyos_vmware_cert: "{{ vyos_vmware_dir }}/vyos_vmware_image.cert"
+vyos_vmware_sign: False

@@ -1,3 +1,10 @@
+- name: Create output directory if it does not exist
+  become: false
+  file:
+    path: "{{ vyos_vmware_dir }}"
+    state: directory
+    mode: '0755'
+
 - name: Convert raw to vmdk
   command: qemu-img convert -f raw "{{ vyos_raw_img }}" -O vmdk -o adapter_type=lsilogic "{{ vyos_vmware_tmp_vmdk }}"
 
@@ -30,7 +37,7 @@
 - name: Generate MF
   shell: openssl sha1 "{{ vyos_vmware_vmdk | basename }}" "{{ vyos_vmware_ovf | basename }}"
   args:
-    chdir: /tmp
+    chdir: "{{ vyos_vmware_dir }}"
   register: result
 
 - name: Create MF
@@ -39,9 +46,15 @@
     dest: "{{ vyos_vmware_mf }}"
     content: "{{ result.stdout }}"
 
+- name: Converting the OVF to OVA
+  become: false
+  command: "ovftool {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
+  when: not vyos_vmware_sign
+
 - name: Converting the OVF to signed OVA
   become: false
   command: "ovftool --privateKey={{ vyos_vmware_private_key_path }} {{ vyos_vmware_ovf }} {{ vyos_vmware_ova }}"
+  when: vyos_vmware_sign
 
 - name: Delete temporary files for VMware
   file:
