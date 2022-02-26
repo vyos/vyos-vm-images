@@ -31,7 +31,6 @@
   become: true
   command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y --no-install-recommends {{ lookup('file', 'files/custom_packages_list.txt') }}
 - name: Install custom packages from deb files
-  command:
   become: true
   command: chroot {{ vyos_install_root }} dpkg -i --force-depends /tmp/custom_debs/{{ item | basename }}
   with_fileglob: "{{ vyos_install_root }}/tmp/custom_debs/*.deb"
