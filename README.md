@@ -9,7 +9,7 @@ You need a machine with at least 20 GB free space with Debian 10 (bare-metal, vi
 ```
 sudo apt update
 sudo apt install -y python3 python3-pip
-pip3 install poetry
+sudo pip3 install poetry
 poetry install
 poetry shell
 ```
@@ -25,7 +25,8 @@ All other requirements will be installed by ansible-playbook.
 
 ## Prepare
 
-You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible-playbook. Resulting images also will be located inside /tmp/ directory.
+You can copy the base ISO image with VyOS to ./build/vyos.iso before running ansible-playbook, or specify its location with the iso_local variable. The latest rolling build will be downloaded by the playbook.
+Resulting images also will be located inside ./build/ directory.
 
 ## Supported Platforms
 
