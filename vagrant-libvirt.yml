@@ -1,5 +1,5 @@
 ---
-- hosts: vagrant-libvirt
+- hosts: vagrant_libvirt
   become: True
   gather_facts: False
   connection: local

@@ -10,8 +10,8 @@ localhost
 [hyperv]
 localhost
 
-[vagrant-libvirt]
+[vagrant_libvirt]
 localhost
 
-[vagrant-virtualbox]
+[vagrant_virtualbox]
 localhost

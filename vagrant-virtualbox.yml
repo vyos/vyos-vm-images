@@ -1,5 +1,5 @@
 ---
-- hosts: vagrant-virtualbox
+- hosts: vagrant_virtualbox
   become: True
   gather_facts: False
   connection: local
