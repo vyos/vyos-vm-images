@@ -1,0 +1,25 @@
+- name: Relase Vagrant Box
+  when: release
+  block:
+    - name: Check Vagrant Cloud login
+      become: no
+      command: "vagrant cloud auth login --check"
+
+    - name: Set box version for rolling release
+      set_fact:
+        box_version: "{{ vyos_version.split('-')[2][0:8] }}.{{ vyos_version.split('-')[2][8:10] }}.{{ vyos_version.split('-')[2][10:12] }}"
+      when: vyos_version.split("-") | length == 3
+
+    - name: Set box version for epa and rc
+      set_fact:
+        box_version: "{{ vyos_version.split('-')[0] }}"
+      when: vyos_version.split("-") | length == 2
+
+    - name: Set box version for LTS release
+      set_fact:
+        box_version: "{{ vyos_version }}"
+      when: vyos_version.split("-") | length == 1
+
+    - name: Publish the Vagrant box
+      become: no
+      command: "vagrant cloud publish {{ vyos_vagrant_box_name }} {{ box_version }} {{ vagrant_provider }} {{ vyos_output_img }} --version-description \"VyOS {{ vyos_version }}\" --release --force"

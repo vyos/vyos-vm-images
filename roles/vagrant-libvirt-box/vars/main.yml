@@ -1,6 +1,7 @@
-vyos_vagrant_libvirt_box_img: /tmp/box.img
+vyos_vagrant_libvirt_dir: "/tmp/vyos_vagrant_libvirt"
+vyos_vagrant_libvirt_box_img: "{{ vyos_vagrant_libvirt_dir }}/box.img"
 vyos_vagrant_libvirt_metadata: files/metadata.json
 vyos_vagrant_libvirt_vagrantfile: files/Vagrantfile
-vyos_vagrant_libvirt_tmp_metadata: /tmp/metadata.json
-vyos_vagrant_libvirt_tmp_vagrantfile: /tmp/Vagrantfile
+vyos_vagrant_libvirt_tmp_metadata: "{{ vyos_vagrant_libvirt_dir }}/metadata.json"
+vyos_vagrant_libvirt_tmp_vagrantfile: "{{ vyos_vagrant_libvirt_dir }}/Vagrantfile"
 vyos_vagrant_box_name: vyos/current
