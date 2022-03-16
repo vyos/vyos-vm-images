@@ -9,13 +9,12 @@
       - e2fsprogs
       - gnupg
       - qemu-utils
-      - python-lxml
-      - aufs-tools
+      - python3-lxml
       - grub-efi-amd64
       - grub-efi-amd64-bin
       - grub-common
       - isolinux
-      - python-requests
+      - python3-requests
       - rsync
       - unzip
       - zlib1g-dev

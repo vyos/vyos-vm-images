@@ -31,6 +31,7 @@
       path: "{{ vyos_install_root }}/boot/efi"
       fstype: vfat
       state: mounted
+      boot: no
   when: partition_num_efi is defined
 
 - name: Install GRUB in the boot sector of {{ vyos_target_drive }}
@@ -60,4 +61,5 @@
       path: "{{ vyos_install_root }}/boot/efi"
       fstype: vfat
       state: absent
+      boot: no
   when: partition_num_efi is defined
