@@ -6,6 +6,7 @@
     fstype: iso9660
     opts: loop,ro
     state: mounted
+    boot: no
 
 - name: Verify checksums of all the files in the ISO image
   command: md5sum -c md5sum.txt
@@ -21,3 +22,4 @@
     fstype: squashfs
     opts: loop,ro
     state: mounted
+    boot: no

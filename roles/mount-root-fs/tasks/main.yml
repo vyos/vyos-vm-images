@@ -1,17 +1,39 @@
 - name: Mount squashfs image from root partition
   become: true
   mount:
-    name: "{{ vyos_read_root }}"
+    path: "{{ vyos_read_root }}"
     src: "{{ vyos_write_root }}/boot/{{ vyos_version }}/{{ vyos_version }}.squashfs"
     fstype: squashfs
     opts: loop,ro
     state: mounted
+    boot: no
+
+- name: Set rw directory for overlayfs
+  set_fact:
+    vyos_rw_dir: "{{ vyos_write_root }}/boot/{{ vyos_version }}/rw"
+
+- name: Create a rw directory if it does not exist
+  file:
+    path: "{{ vyos_rw_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Set work directory for overlayfs
+  set_fact:
+    vyos_work_dir: "{{ vyos_write_root }}/boot/{{ vyos_version }}/work"
+
+- name: Create a work directory if it does not exist
+  file:
+    path: "{{ vyos_work_dir }}"
+    state: directory
+    mode: '0755'
 
 - name: Set up union root for post installation tasks
   become: true
   mount:
-    name: "{{ vyos_install_root }}"
-    src: none
-    fstype: aufs
-    opts: "noatime,dirs={{ vyos_write_root }}/boot/{{ vyos_version }}/rw=rw:{{ vyos_read_root }}=rr"
+    path: "{{ vyos_install_root }}"
+    src: overlay
+    fstype: overlay
+    opts: "noatime,upperdir={{ vyos_rw_dir }},lowerdir={{ vyos_read_root }},workdir={{ vyos_work_dir }}"
     state: mounted
+    boot: no
