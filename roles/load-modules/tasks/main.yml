@@ -1,5 +1,0 @@
-- name: modprobe aufs
-  become: true
-  modprobe:
-    name: aufs
-    state: present

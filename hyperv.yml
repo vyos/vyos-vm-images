@@ -13,7 +13,6 @@
     cloud_init_ds_list: "{{ cloud_init_ds_string.split(',') }}"
   roles:
     - install-packages
-    - load-modules
     - download-iso
     - mount-iso
     - get-version
