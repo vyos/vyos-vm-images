@@ -3,3 +3,4 @@
     url: "{{ vyos_iso_url }}"
     dest: "{{ vyos_iso_local }}"
     force: no
+  when: not vyos_iso_local is exists
