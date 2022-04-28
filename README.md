@@ -143,3 +143,15 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     ```
     -e custom_packages=true
     ```
+
+- Enable DHCP on eth0 (default: `false`):
+
+    ```
+    -e enable_dhcp=true
+    ```
+
+- Enable SSH (default: `false`):
+
+    ```
+    -e enable_ssh=true
+    ```
