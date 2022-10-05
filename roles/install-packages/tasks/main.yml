@@ -21,3 +21,4 @@
       - squashfs-tools
       - xorriso
     state: present
+    force_apt_get: yes
