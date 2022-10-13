@@ -21,7 +21,7 @@
     dest: "{{ vyos_install_root }}/etc/resolv.conf"
 - name: apt-get update
   become: true
-  command: chroot {{ vyos_install_root }} apt-get -o Acquire::Check-Valid-Until=false update
+  command: chroot {{ vyos_install_root }} apt-get update
 - name: Install cloud-init
   become: true
   command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y cloud-init cloud-utils ifupdown
