@@ -6,7 +6,6 @@ Vagrant.configure("2") do |config|
                           group: 'users',
                           mount_options: ['dmode=775,fmode=775']
   config.ssh.username = "vyos"
-  config.ssh.password = "vyos"
   config.vm.provider :libvirt do |libvirt|
     libvirt.driver = "kvm"
     libvirt.connect_via_ssh = false

@@ -9,6 +9,12 @@ system {
                 encrypted-password "$6$MjV2YvKQ56q$QbL562qhRoyUu8OaqrXagicvcsNpF1HssCY06ZxxghDJkBCfSfTE/4FlFB41xZcd/HqYyVBuRt8Zyq3ozJ0dc."
 {% endif %}
                 plaintext-password ""
+{% if vagrant_insecure_key is defined %}
+                public-keys vagrant {
+                    key "{{ vagrant_insecure_key }}"
+                    type ssh-rsa
+                }
+{% endif %}
             }
 {% if vyos_version | regex_search('(^1\.2)') %}
             level admin
