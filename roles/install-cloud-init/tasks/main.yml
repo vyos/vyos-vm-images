@@ -24,7 +24,7 @@
   command: chroot {{ vyos_install_root }} apt-get update
 - name: Install cloud-init
   become: true
-  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y cloud-init cloud-utils ifupdown
+  command: chroot {{ vyos_install_root }} apt-get -t {{ vyos_branch | default('current') }} install -y --force-yes cloud-init cloud-utils ifupdown
 - name: apt-get clean
   become: true
   command: chroot {{ vyos_install_root }} apt-get clean
