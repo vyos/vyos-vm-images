@@ -1,3 +1,4 @@
 - name: Create loopback devices
   shell: "[ ! -e /dev/loop{{ item }} ]] && mknod -m 0666 /dev/loop{{ item }} b 7 {{ item }}"
   loop: "{{ range(0, 20)|list }}"
+  failed_when: false
