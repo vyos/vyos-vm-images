@@ -41,7 +41,7 @@
   
 - name: Find loop device path
   become: true
-  shell: "losetup -l -O NAME,BACK-FILE | awk '{ if (match($2, \"{{ vyos_raw_img }}\")) print $1}'"
+  shell: "losetup -l -O NAME,BACK-FILE | awk '{ if (!/deleted/ && match($2, \"{{ vyos_raw_img }}\")) print $1}'"
   register: loop_device
 
 - name: Set vyos_target_drive fact
