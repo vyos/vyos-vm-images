@@ -29,6 +29,7 @@
             - install-cloud-init-wrapper
             - install-guest-agent-wrapper
             - install-custom-packages-wrapper
+            - copy-custom-files
             - fstrim
             - unmount-pre
             - create-pxe-archive
