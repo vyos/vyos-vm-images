@@ -1,0 +1,7 @@
+- name: Copy custom files to the system, preserving paths
+  become: true
+  copy:
+    src: "files/custom_files/"
+    dest: "{{ vyos_install_root }}"
+    force: true
+  when: custom_files is defined

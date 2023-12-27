@@ -144,6 +144,12 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     -e custom_packages=true
     ```
 
+- Copy custom files. All files from inside the `files/custom_files/` directory will be copied to the target filesystem recursively:
+
+    ```
+    -e custom_files=true
+    ```
+
 - Enable DHCP on eth0 (default: `false`):
 
     ```
