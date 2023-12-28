@@ -161,3 +161,9 @@ You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible
     ```
     -e enable_ssh=true
     ```
+
+- Remove `login` from configuration. Unlike `keep_user`, this option will completely remove `system login` from configuration.
+
+    ```
+    -e without_login=true
+    ```
