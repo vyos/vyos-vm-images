@@ -1,5 +1,6 @@
 system {
     host-name vyos
+{% if without_login is not defined or without_login == "false" %}
     login {
         user vyos {
             authentication {
@@ -15,6 +16,7 @@ system {
 {% endif %}
         }
     }
+{% endif %}
     syslog {
         global {
             facility all {
