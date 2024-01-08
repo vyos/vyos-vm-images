@@ -22,7 +22,26 @@ All other requirements will be installed by ansible-playbook.
 
 ## Prepare
 
-You need to copy the ISO image with VyOS to /tmp/vyos.iso before running ansible-playbook. Resulting images also will be located inside /tmp/ directory.
+You need to copy the ISO image with VyOS to `/tmp/vyos.iso` before running ansible-playbook. Resulting images also will be located inside `/tmp/` directory.
+
+### Docker
+The Dockerfile has all required dependencies.
+1. Download the `Dockerfile`
+```
+wget https://raw.githubusercontent.com/vyos/vyos-vm-images/current/Dockerfile
+```
+2. Build local image with name `vyos-vm-images` (only if you do not have it)
+```
+docker build --tag vyos-vm-images:latest -f ./Dockerfile .
+```
+3. Start and connect to the container:
+```shell
+docker run --rm -it --privileged -v $(pwd):/vm-build -v $(pwd)/images:/images -w /vm-build vyos-vm-images:latest bash
+```
+4. Clone repo
+```
+git clone https://github.com/vyos/vyos-vm-images.git && cd vyos-vm-images
+```
 
 ## Supported Platforms
 
