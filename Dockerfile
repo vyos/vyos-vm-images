@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zlib1g-dev \
     squashfs-tools \
-    xorriso
+    xorriso \
+    build-essential
 
 # Install not required dependencies
 RUN apt-get install -y \
