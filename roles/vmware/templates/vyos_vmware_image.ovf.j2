@@ -240,6 +240,10 @@
       </ovf:Item>
       <vmw:Config ovf:required="false" vmw:key="cpuHotAddEnabled" vmw:value="true"/>
       <vmw:Config ovf:required="false" vmw:key="memoryHotAddEnabled" vmw:value="true"/>
+      {%- if parttable_type == 'gpt' -%}
+      <vmw:Config ovf:required="false" vmw:key="firmware" vmw:value="efi"/>
+      <vmw:Config ovf:required="false" vmw:key="bootOptions.efiSecureBootEnabled" vmw:value="false"/>
+      {%- endif -%}
     </VirtualHardwareSection>
   </VirtualSystem>
 </ovf:Envelope>
