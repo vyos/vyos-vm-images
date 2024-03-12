@@ -22,7 +22,7 @@
     - install-image
     - mount-root-fs
     - install-config
-    - install-grub
+    - install-grub-wrapper
     - install-persistence-conf
     - unmount-pre
     - unmount-all

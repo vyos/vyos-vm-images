@@ -1,0 +1,55 @@
+# It is necessary to mount and bind /dev, /proc, /sys and /boot in order to execute grub-install
+# and install GRUB correctly within the {{ volume_drive }} using chroot
+
+# XXX: ansible mount module requires fstype so it cannot be used for binding an already
+# mounted location, we get to use mount directly at least for /boot
+- name: Mount and bind /dev /proc /sys and {{ vyos_write_root }}/boot to {{ vyos_install_root }}
+  become: true
+  shell: mount --bind /dev {{ vyos_install_root }}/dev &&
+         mount --bind /proc {{ vyos_install_root }}/proc &&
+         mount --bind /sys {{ vyos_install_root }}/sys &&
+         mount --bind {{ vyos_write_root }} {{ vyos_install_root }}/boot 
+
+- name: Mount EFI
+  become: true
+  mount:
+      src: "{{ vyos_target_drive }}p{{ partition_num_efi }}"
+      path: "{{ vyos_install_root }}/boot/efi"
+      fstype: vfat
+      state: mounted
+      boot: no
+  when: partition_num_efi is defined
+
+- name: Pause
+  pause:
+    prompt: "Continue?"
+
+- name: Copy installer
+  become: true
+  copy:
+    src: "files/vyos_unattended_installer.py"
+    dest: "{{ vyos_install_root }}/tmp/vyos_unattended_installer.py"
+
+- name: Install GRUB and configuration
+  become: true
+  command: chroot {{ vyos_install_root }} python3 /tmp/vyos_unattended_installer.py
+  environment:
+      vyos_version: "{{ vyos_version }}"
+      install_target: "{{ loop_device.stdout }}"
+      console_type: "{{ grub_console }}"
+
+- name: Remove installer
+  become: true
+  file:
+    path: "{{ vyos_install_root }}/tmp/vyos_unattended_installer.py"
+    state: absent
+
+- name: Unmount EFI
+  become: true
+  mount:
+      src: "{{ vyos_target_drive }}p{{ partition_num_efi }}"
+      path: "{{ vyos_install_root }}/boot/efi"
+      fstype: vfat
+      state: absent
+      boot: no
+  when: partition_num_efi is defined

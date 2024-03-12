@@ -21,7 +21,7 @@
     - install-image
     - mount-root-fs
     - install-config
-    - install-grub
+    - install-grub-wrapper
     - install-persistence-conf
     - install-cloud-init-wrapper
     - unmount-pre
