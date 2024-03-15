@@ -20,10 +20,6 @@
       boot: no
   when: partition_num_efi is defined
 
-- name: Pause
-  pause:
-    prompt: "Continue?"
-
 - name: Copy installer
   become: true
   copy:
